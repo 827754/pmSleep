@@ -1,0 +1,158 @@
+{
+    "image": {
+        "おいしいシッポ": "1XR7rrVGO0omh48SFRLSLmhxquLBmci6C",
+        "あじわいキノコ": "1vZ4Lk4i0OpZKAJNC4DqFuMw4XLwEDpSR",
+        "ふといながねぎ": "11qvB5syNodLvxzDymIan_aNh8AM5vj6L",
+        "リラックスカカオ": "1NbfsCFn4Ny1LH-xalhS3KpEI5Hd_NgBL",
+        "ピュアなオイル": "18DZw6_mDOHxy9M_sDIWXsPRzlCtmahSy",
+        "げきからハーブ": "1h94j3TyMTS5hlxdKh8YPsQna0OYgdkjO",
+        "ほっこりポテト": "1Ady-tMB_vOqQh8wCfSi_E1AxFcoy7rkO",
+        "とくせんエッグ": "1MjXWwq0lzcMhQRs1vRQ0TJ8U_sVZ6ZmJ",
+        "ワカクサ大豆": "1yZXlG5P9JUOSfntjsNZfw0GqXGzberAs",
+        "あんみんトマト": "12CpWyX6k5hlbyl5LgoqOegWztRy_-XMt",
+        "あったかジンジャー": "1HrRqZxR1BRRMHGNO8Yo2x7PcG2uzdHbo",
+        "あまいミツ": "1mOvXaEDGfG_TshtyR05qTh2NtS_653AW",
+        "モーモーミルク": "1Xkwq8ash8vkwgtdmpb8NXLgw99DbEbth",
+        "マメミート": "1K8RlWZjD5M1E4FbU0oRQNgB6ibH0Wri1",
+        "とくせんリンゴ": "13SfJZdjC5wAHQfoCi27xO1ljrkP8cOPy",
+        "モモンのみ": "1iQgcA3pesSw7696g2p49DI8g6VSlusoF",
+        "ベリブのみ": "11yz5A_QYHQhYN-Pwo362XZttYvbsyPFh",
+        "ウイのみ": "1HEEZBZ-HHISw2MeaaAfVOFJUmDjdetKg",
+        "ヤチェのみ": "1NCfTI6joOxwynhPpZKkb4H_19HlT8Wfy",
+        "ブリーのみ": "1GrGocZc9ddYPLGUPy8qSl5-lthUrKrES",
+        "オボンのみ": "1t4ubpof1UbcXATlQvFXZ_IiwX3sCxEQ6",
+        "ラムのみ": "1HxnJABT2erJEFZvFYeLxxXlZ5pr7SP4f",
+        "マゴのみ": "1QP8VoDomn_AV5Y4Giz3cKMZnnATDs01A",
+        "シーヤのみ": "1KVI7KkghKrmHn7oilEJfSqyT95Iz0KME",
+        "フィラのみ": "1RDzVOvKO3PhuBb9VH_RHR9jIsBUuObXk",
+        "カゴのみ": "1O5Ah7lEK2lgLeSItsz20gDEhTO_VCDnB",
+        "クラボのみ": "1-kDC6-w9b7a0eNA4h8mRl-ro3fPhK8OM",
+        "チーゴのみ": "1J9RBjLf1NcaC_H3buhFnPZIGTqF9nVM-",
+        "ドリのみ": "1LzosfxcRgl-YPikMajBi6jc0e-BETf5b",
+        "ウブのみ": "1NlwDAOvZp4frirJb2k1i65Enpf9fVNRB",
+        "オレンのみ": "15UGNQl_R_NlLbShDPZBMJItW8scY-w55",
+        "ヒメリのみ": "1QFExQ1YTPG1DkEQkJkeKumd96UVyxRjp",
+        "キーのみ": "1HjA70v5XxBHdrqv46KeiP0mO7i1Hh3I3"
+    },
+    "personality": {
+        "いじっぱり": {
+            "up": "おてつだいスピード",
+            "down": "食材おてつだい確率"
+        },
+        "うっかりや": {
+            "up": "食材おてつだい確率",
+            "down": "メインスキル発生確率"
+        },
+        "おくびょう": {
+            "up": "EXP獲得量",
+            "down": "おてつだいスピード"
+        },
+        "おだやか": {
+            "up": "メインスキル発生確率",
+            "down": "おてつだいスピード"
+        },
+        "おっとり": {
+            "up": "食材おてつだい確率",
+            "down": "げんき回復量"
+        },
+        "おとなしい": {
+            "up": "メインスキル発生確率",
+            "down": "げんき回復量"
+        },
+        "がんばりや": {
+            "up": "",
+            "down": ""
+        },
+        "きまぐれ": {
+            "up": "",
+            "down": ""
+        },
+        "さみしがり": {
+            "up": "おてつだいスピード",
+            "down": "げんき回復量"
+        },
+        "しんちょう": {
+            "up": "メインスキル発生確率",
+            "down": "食材おてつだい確率"
+        },
+        "すなお": {
+            "up": "",
+            "down": ""
+        },
+        "ずぶとい": {
+            "up": "げんき回復量",
+            "down": "おてつだいスピード"
+        },
+        "せっかち": {
+            "up": "EXP獲得量",
+            "down": "げんき回復量"
+        },
+        "てれや": {
+            "up": "",
+            "down": ""
+        },
+        "なまいき": {
+            "up": "メインスキル発生確率",
+            "down": "EXP獲得量"
+        },
+        "のうてんき": {
+            "up": "げんき回復量",
+            "down": "メインスキル発生確率"
+        },
+        "のんき": {
+            "up": "げんき回復量",
+            "down": "EXP獲得量"
+        },
+        "ひかえめ": {
+            "up": "食材おてつだい確率",
+            "down": "おてつだいスピード"
+        },
+        "まじめ": {
+            "up": "",
+            "down": ""
+        },
+        "むじゃき": {
+            "up": "EXP獲得量",
+            "down": "メインスキル発生確率"
+        },
+        "やんちゃ": {
+            "up": "おてつだいスピード",
+            "down": "メインスキル発生確率"
+        },
+        "ゆうかん": {
+            "up": "おてつだいスピード",
+            "down": "EXP獲得量"
+        },
+        "ようき": {
+            "up": "EXP獲得量",
+            "down": "食材おてつだい確率"
+        },
+        "れいせい": {
+            "up": "食材おてつだい確率",
+            "down": "EXP獲得量"
+        },
+        "わんぱく": {
+            "up": "げんき回復量",
+            "down": "食材おてつだい確率"
+        }
+    },
+    "subSkill": {
+        "おてつだいボーナス": "gold",
+        "おてつだいスピードM": "blue",
+        "おてつだいスピードS": "white",
+        "きのみの数S": "gold",
+        "げんき回復ボーナス": "gold",
+        "スキルレベルアップM": "gold",
+        "スキルレベルアップS": "white",
+        "スキル確率アップM": "blue",
+        "スキル確率アップS": "white",
+        "ゆめのかけらボーナス": "gold",
+        "リサーチEXPボーナス": "gold",
+        "最大所持数アップL": "blue",
+        "最大所持数アップM": "blue",
+        "最大所持数アップS": "white",
+        "食材確率アップM": "blue",
+        "食材確率アップS": "white",
+        "睡眠EXPボーナス": "gold"
+    }
+}

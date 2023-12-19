@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>サイトタイトル</title>
+    <meta name="description" content="ディスクリプションを入力">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.js"></script>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@3.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+</head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <v-content>
+                <v-container>
+                    <v-card v-for="(record,index) in vueFormData" class="pa-5 ma-5">
+                        <v-row>
+                            <v-col cols="1" class="pa-0 ma-0">
+                                <v-avatar color="red" size="35">
+                                    <span class="white--text text-body">{{record.誰のデータですか}}</span>
+                                </v-avatar>
+                            </v-col>
+                            <v-col cols="10" class="pa-0 ma-0">
+                                <v-sheet class="text-h5">
+                                    {{existPokemon(record['ポケモンを選んでください（木の実）'],record['ポケモンを選んでください（スキル）'],record['ポケモンを選んでください（食材）'])}}
+                                </v-sheet>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="12" class="pa-0 ma-0">
+                                <span>Lv10</span>
+                                <v-btn depressed>
+                                    {{record.Lv10解放スキル}}
+                                </v-btn>
+                                <span>Lv25</span>
+                                <v-btn depressed>
+                                    {{record.Lv25解放スキル}}
+                                </v-btn>
+                                <span>Lv50</span>
+                                <v-btn depressed>
+                                    {{record.Lv50解放スキル}}
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="12" class="pa-0 ma-0">
+                                <span >せいかく:</span>
+                                <v-chip v-if="record.せいかく" class="ma-2" color="primary" outlined>
+                                    {{record.せいかく}}
+                                </v-chip>
+                                <span v-if="record.Lv30解放食材を選んでください">Lv30</span>
+                                <v-chip v-if="record.Lv30解放食材を選んでください" class="ma-2" color="green" outlined label>
+                                    {{record.Lv30解放食材を選んでください}}
+                                </v-chip>
+                                <span v-if="record.Lv60解放食材を選んでください">Lv60</span>
+                                <v-chip v-if="record.Lv60解放食材を選んでください" class="ma-2" color="green" outlined label>
+                                    {{record.Lv60解放食材を選んでください}}
+                                </v-chip>
+                            </v-col>
+                        </v-row>
+                    </v-card>
+                </v-container>
+            </v-content>
+        </v-app>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+</body>
+
+</html>
+
+<script>
+    const formData = [
+        {
+            "タイムスタンプ": "Sun Dec 17 2023 11:31:58 GMT+0900 (日本標準時)",
+            "誰のデータですか": "やぐ",
+            "得意タイプはなんですか": "木の実",
+            "ポケモンを選んでください（木の実）": "オーダイル",
+            "ポケモンを選んでください（スキル）": "",
+            "ポケモンを選んでください（食材）": "",
+            "Lv10解放スキル": "おてつだいボーナス",
+            "Lv25解放スキル": "きのみの数S",
+            "Lv50解放スキル": "最大所持数アップL",
+            "せいかく": "ゆうかん",
+            "Lv30解放食材を選んでください": "",
+            "Lv60解放食材を選んでください": ""
+        },
+        {
+            "タイムスタンプ": "Sun Dec 17 2023 12:28:40 GMT+0900 (日本標準時)",
+            "誰のデータですか": "フー",
+            "得意タイプはなんですか": "木の実",
+            "ポケモンを選んでください（木の実）": "オーダイル",
+            "ポケモンを選んでください（スキル）": "",
+            "ポケモンを選んでください（食材）": "",
+            "Lv10解放スキル": "きのみの数S",
+            "Lv25解放スキル": "おてつだいボーナス",
+            "Lv50解放スキル": "おてつだいスピードM",
+            "せいかく": "さみしがり",
+            "Lv30解放食材を選んでください": "",
+            "Lv60解放食材を選んでください": ""
+        },
+        {
+            "タイムスタンプ": "Sun Dec 17 2023 12:37:22 GMT+0900 (日本標準時)",
+            "誰のデータですか": "フー",
+            "得意タイプはなんですか": "食材",
+            "ポケモンを選んでください（木の実）": "",
+            "ポケモンを選んでください（スキル）": "",
+            "ポケモンを選んでください（食材）": "カメックス",
+            "Lv10解放スキル": "食材確率アップS",
+            "Lv25解放スキル": "おてつだいスピードS",
+            "Lv50解放スキル": "最大所持数アップS",
+            "せいかく": "さみしがり",
+            "Lv30解放食材を選んでください": "",
+            "Lv60解放食材を選んでください": ""
+        },
+        {
+            "タイムスタンプ": "Sun Dec 17 2023 12:41:47 GMT+0900 (日本標準時)",
+            "誰のデータですか": "フー",
+            "得意タイプはなんですか": "食材",
+            "ポケモンを選んでください（木の実）": "",
+            "ポケモンを選んでください（スキル）": "",
+            "ポケモンを選んでください（食材）": "リザードン",
+            "Lv10解放スキル": "スキルレベルアップM",
+            "Lv25解放スキル": "スキル確率アップM",
+            "Lv50解放スキル": "ゆめのかけらボーナス",
+            "せいかく": "おっとり",
+            "Lv30解放食材を選んでください": "",
+            "Lv60解放食材を選んでください": ""
+        },
+        {
+            "タイムスタンプ": "Sun Dec 17 2023 14:03:12 GMT+0900 (日本標準時)",
+            "誰のデータですか": "フー",
+            "得意タイプはなんですか": "木の実（緑）",
+            "ポケモンを選んでください（木の実）": "チルタリス",
+            "ポケモンを選んでください（スキル）": "",
+            "ポケモンを選んでください（食材）": "",
+            "Lv10解放スキル": "きのみの数S",
+            "Lv25解放スキル": "最大所持数アップS",
+            "Lv50解放スキル": "おてつだいスピードS",
+            "せいかく": "むじゃき",
+            "Lv30解放食材を選んでください": "",
+            "Lv60解放食材を選んでください": ""
+        },
+        {
+            "タイムスタンプ": "Sun Dec 17 2023 14:05:45 GMT+0900 (日本標準時)",
+            "誰のデータですか": "フー",
+            "得意タイプはなんですか": "木の実（緑）",
+            "ポケモンを選んでください（木の実）": "バタフリー",
+            "ポケモンを選んでください（スキル）": "",
+            "ポケモンを選んでください（食材）": "",
+            "Lv10解放スキル": "スキルレベルアップS",
+            "Lv25解放スキル": "最大所持数アップS",
+            "Lv50解放スキル": "おてつだいスピードM",
+            "せいかく": "れいせい",
+            "Lv30解放食材を選んでください": "",
+            "Lv60解放食材を選んでください": ""
+        },
+        {
+            "タイムスタンプ": "Sun Dec 17 2023 14:36:31 GMT+0900 (日本標準時)",
+            "誰のデータですか": "フー",
+            "得意タイプはなんですか": "食材（黄色）",
+            "ポケモンを選んでください（木の実）": "",
+            "ポケモンを選んでください（スキル）": "",
+            "ポケモンを選んでください（食材）": "カメックス",
+            "Lv10解放スキル": "食材確率アップS",
+            "Lv25解放スキル": "おてつだいスピードS",
+            "Lv50解放スキル": "最大所持数アップS",
+            "せいかく": "さみしがり",
+            "Lv30解放食材を選んでください": "",
+            "Lv60解放食材を選んでください": ""
+        },
+        {
+            "タイムスタンプ": "Sun Dec 17 2023 14:40:12 GMT+0900 (日本標準時)",
+            "誰のデータですか": "フー",
+            "得意タイプはなんですか": "食材（黄色）",
+            "ポケモンを選んでください（木の実）": "",
+            "ポケモンを選んでください（スキル）": "",
+            "ポケモンを選んでください（食材）": "カメックス",
+            "Lv10解放スキル": "食材確率アップS",
+            "Lv25解放スキル": "おてつだいスピードS",
+            "Lv50解放スキル": "最大所持数アップS",
+            "せいかく": "さみしがり",
+            "Lv30解放食材を選んでください": "リラックスカカオ",
+            "Lv60解放食材を選んでください": "マメミート"
+        }
+    ]
+    var app = new Vue({
+        el: '#app',
+        vuetify: new Vuetify(),
+        data: {
+            vueFormData: formData,
+        },
+        mounted: function () {
+        },
+        methods: {
+            existPokemon: function (one, two, three) {
+                console.log(one)
+                console.log(two)
+                console.log(three)
+                if (one) {
+                    return one;
+                }
+                if (two) {
+                    return two;
+                }
+                if (three) {
+                    return three;
+                }
+                return ''
+            },
+            a: function (one, two, three) {
+                console.log(one)
+                console.log(two)
+                console.log(three)
+                if (one) {
+                    return one;
+                }
+                if (two) {
+                    return two;
+                }
+                if (three) {
+                    return three;
+                }
+                return ''
+            }
+        }
+    })
+</script>

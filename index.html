@@ -23,29 +23,42 @@
 
 <body>
     <div class="iframe-wrap">
-        <iframe
+        <iframe id="myIframe"
             src="https://script.google.com/macros/s/AKfycbwbXUsAVnaQFW9K9B7X0l5Aiw2ULpPTBUFR6NoHWFkNSzFCwncNNQRf-rIINDbwojA9eg/exec"
-            frameborder="0">
+            frameborder="0" style="width: 1000px; height: 100vh; border: none;">
         </iframe>
     </div>
+    <script>
+        function resizeIframe() {
+            var iframe = document.getElementById('myIframe');
+            var windowWidth = window.innerWidth;
+            iframe.style.transform = 'scale(' + (windowWidth / 1000) + ')';
+
+            iframe.style.height = window.innerHeight + 'px';
+        }
+
+        window.addEventListener('resize', resizeIframe);
+        resizeIframe(); // 初期表示時にも実行
+    </script>
 </body>
 
 
 <style>
-    @media (orientation: portrait) {
+    /* @media (orientation: portrait) {
         .iframe-wrap {
             position: relative;
             width: 100%;
             padding: calc(4 / 3 * 100%) 0 0;
         }
     }
+
     @media (orientation: landscape) {
         .iframe-wrap {
             position: relative;
             width: 100%;
             padding: calc(3 / 4 * 100%) 0 0;
         }
-    }
+    } */
 
     /* .iframe-wrap {
         position: relative;
@@ -54,12 +67,21 @@
     /* 高さと横幅の数字には単位は入れません。 */
     /* } */
 
-    .iframe-wrap iframe {
+    /* .iframe-wrap iframe {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: auto;
+        max-width: 100% !important;
         /* height: 90vh; */
+    /*   transform: scale(1);
+        transform-origin: top left;
     }
+
+    @media (max-width: 1000px) {
+        .iframe-wrap iframe {
+            transform: scale(calc(100vw / 1000));
+        }
+    } */
 </style>

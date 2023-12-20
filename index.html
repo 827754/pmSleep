@@ -31,19 +31,34 @@
 
 
 <style>
-    .iframe-wrap {
+    @media (orientation: portrait) {
+        .iframe-wrap {
+            position: relative;
+            width: 100%;
+            padding: calc(4 / 3 * 100%) 0 0;
+        }
+    }
+    @media (orientation: landscape) {
+        .iframe-wrap {
+            position: relative;
+            width: 100%;
+            padding: calc(3 / 4 * 100%) 0 0;
+        }
+    }
+
+    /* .iframe-wrap {
         position: relative;
         width: 100%;
         /* padding: calc(480 / 854 * 100%) 0 0; */
-        /* 高さと横幅の数字には単位は入れません。 */
-    }
-    
+    /* 高さと横幅の数字には単位は入れません。 */
+    /* } */
+
     .iframe-wrap iframe {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
-        /* height: 100%; */
-        height: 90vh;
-     }
+        height: 100%;
+        /* height: 90vh; */
+    }
 </style>

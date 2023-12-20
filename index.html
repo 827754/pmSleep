@@ -27,24 +27,49 @@
             frameborder="0">
         </iframe>
     </div>
+    <script>
+        function resizeIframe() {
+            var windowWidth = window.innerWidth;
+            var windowHeight = window.innerHeight;
+
+            // windowWidth を利用して新しい値を計算
+            var paddingValue = 'calc(' + windowHeight + ' / ' +  windowWidth + ' * 100%) 0 0';
+
+            // CSSに新しい値を適用
+            var contentElement = document.querySelector('.iframe-wrap');
+            // contentElement.style.padding = 'calc' + paddingValue;
+            contentElement.style.padding = paddingValue;
+
+        }
+
+        window.addEventListener('resize', resizeIframe);
+        resizeIframe(); // 初期表示時にも実行
+    </script>
 </body>
 
 
 <style>
-    @media (orientation: portrait) {
+    .iframe-wrap {
+        position: relative;
+        width: 100%;
+        /* padding: calc(4 / 3 * 100%) 0 0; */
+    }
+
+    /* @media (orientation: portrait) {
         .iframe-wrap {
             position: relative;
             width: 100%;
             padding: calc(4 / 3 * 100%) 0 0;
         }
     }
+
     @media (orientation: landscape) {
         .iframe-wrap {
             position: relative;
             width: 100%;
             padding: calc(3 / 4 * 100%) 0 0;
         }
-    }
+    } */
 
     /* .iframe-wrap {
         position: relative;

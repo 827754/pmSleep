@@ -242,7 +242,7 @@
             await fetch('DB.json')
                 .then(result => result.json())
                 .then((output) => {
-                    app.database = e;
+                    app.database = output;
                 })
                 .catch(err => console.error(err));
 

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>サイトタイトル</title>
+    <meta name="description" content="ディスクリプションを入力">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.js"></script>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@3.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <!-- <meta name="viewport" content="initial-scale=0.8, maximum-scale=0.1, minimum-scale=0.1, user-scalable=yes width=1000px, target-densitydpi=device-dpi"> -->
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1"> -->
+</head>
+
+<body class="fix-width">
+    <div id="app" class="fix-width">
+        <v-app class="fix-width">
+            <v-content class="fix-width">
+                <v-container class="fix-width">
+
+                    <v-btn depressed v-on:click="changeUser(user)">
+                        ユーザー切り替え
+                    </v-btn>
+                    <v-btn depressed v-on:click="sortArray('index')">
+                        登録順<span v-if="sortKey=='index'&&sortDirection=='asc'">▲</span><span
+                            v-if="sortKey=='index'&&sortDirection=='desc'">▼</span><span
+                            v-if="sortKey!=='index'">{{'　'}}</span>
+                    </v-btn>
+                    <v-btn depressed v-on:click="sortArray('pokemon')">
+                        名前順<span v-if="sortKey=='pokemon'&&sortDirection=='asc'">▲</span><span
+                            v-if="sortKey=='pokemon'&&sortDirection=='desc'">▼</span><span
+                            v-if="sortKey!=='pokemon'">{{'　'}}</span>
+                    </v-btn>
+                    <v-btn depressed v-on:click="sortArray('no')">
+                        図鑑順<span v-if="sortKey=='no'&&sortDirection=='asc'">▲</span><span
+                            v-if="sortKey=='no'&&sortDirection=='desc'">▼</span><span
+                            v-if="sortKey!=='no'">{{'　'}}</span>
+                    </v-btn>
+                    <v-btn depressed v-on:click="sortArray('date')">
+                        日付順<span v-if="sortKey=='date'&&sortDirection=='asc'">▲</span><span
+                            v-if="sortKey=='date'&&sortDirection=='desc'">▼</span><span
+                            v-if="sortKey!=='date'">{{'　'}}</span>
+                    </v-btn>
+
+                    <template v-for="(record,index) in vueFormData">
+                        <v-card class="pa-5 ma-5 ml-0 fix-width" v-if="record.foo==user">
+                            <v-row>
+                                <v-col cols="3">
+                                    <v-layout justify-center>
+                                        <v-avatar color="red" size="35" class="absolute top-0 left-0">
+                                            <span class="white--text text-body">{{record.foo}}</span>
+                                        </v-avatar>
+                                        <v-img :src="getImage(record.no)" max-width="180"></v-img>
+                                    </v-layout>
+                                    <v-sheet class="text-h6 text-center">
+                                        No.{{record.no}} : {{record.pokemon}}
+                                    </v-sheet>
+                                </v-col>
+                                <!-- </v-col> -->
+                                <v-col>
+                                    <v-row>
+                                        <v-col cols="12" class="pa-0 ma-0 mb-2">
+                                            <span>メインスキル</span>
+                                            <v-btn depressed>
+                                                {{record.skill}}
+                                            </v-btn>
+                                            <span>きのみ</span>
+                                            <v-btn depressed>
+                                                <v-img :src="getImageDB(record.berry)" max-width="25"></v-img>
+                                                {{record.berry}}
+                                                </v-img>
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12" class="pa-0 ma-0">
+                                            <span>Lv10</span>
+                                            <v-chip class="ma-2" :color="getSkillColor(record.sub10)" label>
+                                                {{record.sub10}}
+                                            </v-chip>
+                                            <span>Lv25</span>
+                                            <v-chip class="ma-2" :color="getSkillColor(record.sub25)" label>
+                                                {{record.sub25}}
+                                            </v-chip>
+                                            <span>Lv50</span>
+                                            <v-chip class="ma-2" :color="getSkillColor(record.sub50)" label>
+                                                {{record.sub50}}
+                                            </v-chip>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12" class="pa-0 ma-0">
+                                            <span>せいかく:</span>
+                                            <v-chip v-if="record.personality" class="ma-2" color="black" outlined>
+                                                {{record.personality}}
+                                            </v-chip>
+                                            <span v-if="personality(record.personality)">
+                                                <span v-if="personality(record.personality).up"
+                                                    class="text-h5 red--text">▲▲</span>
+                                                <v-chip v-if="personality(record.personality).up" class="ma-2"
+                                                    color="red" outlined label>
+                                                    {{personality(record.personality).up}}
+                                                </v-chip>
+                                                <span v-if="personality(record.personality).down"
+                                                    class="text-h5 primary--text">▼▼</span>
+                                                <v-chip v-if="personality(record.personality).down" class="ma-2"
+                                                    color="primary" outlined label>
+                                                    {{personality(record.personality).down}}
+                                                </v-chip>
+                                            </span>
+                                            <span v-else>
+                                                <v-chip class="ma-2" color="green" outlined label>
+                                                    補正無し
+                                                </v-chip>
+                                            </span>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12" class="pa-0 ma-0">
+                                            <span v-if="record.ingredients0" class="px-0">Lv0</span>
+                                            <v-chip v-if="record.ingredients0" class="ma-2 ml-1 pl-0 pr-2"
+                                                color="grey-lighten-4" outlined label>
+                                                <v-img :src="getImageDB(record.ingredients0)" max-width="25"></v-img>
+                                                {{record.ingredients0}}
+                                            </v-chip>
+                                            <span v-if="record.ingredients30" class="px-0">Lv30</span>
+                                            <v-chip v-if="record.ingredients30" class="ma-2 ml-1 pl-0 pr-2"
+                                                color="grey-lighten-4" outlined label>
+                                                <v-img :src="getImageDB(record.ingredients30)" max-width="25"></v-img>
+                                                {{record.ingredients30}}
+                                            </v-chip>
+                                            <span v-if="record.ingredients60" class="px-0">Lv60</span>
+                                            <v-chip v-if="record.ingredients60" class="ma-2 ml-1 pl-0 pr-2"
+                                                color="grey-lighten-4" outlined label>
+                                                <v-img :src="getImageDB(record.ingredients60)" max-width="25"></v-img>
+                                                {{record.ingredients60}}
+                                            </v-chip>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12" class="pa-0 ma-0">
+                                            <span v-if="record.ingredients0">出会った日:{{record.date}}</span>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                            </v-row>
+                        </v-card>
+                    </template>
+                    <div class="dummy">
+
+                    </div>
+                </v-container>
+            </v-content>
+        </v-app>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+</body>
+
+</html>
+
+<style>
+    .container {
+        width: 100%;
+        padding: 0;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    @media (min-width: 960px) {
+        .container {
+            max-width: initial;
+        }
+    }
+
+    .dummy {
+        height: 100px;
+    }
+
+    .fix-width {
+        /* width: 900px; */
+        /* 例: 幅を300pxに固定 */
+        min-width: 900px;
+        /* 例: 幅を300pxに固定 */
+    }
+
+    @media (orientation: portrait) {
+        .fix-width {
+            /* width: 900px; */
+            /* 例: 幅を300pxに固定 */
+            min-width: 900px;
+            /* 例: 幅を300pxに固定 */
+        }
+
+        html {
+            /* transform-origin: top left; */
+            transform: scale(1);
+        }
+    }
+
+    @media (orientation: landscape) {
+        .fix-width {
+            /* width: 900px; */
+            /* 例: 幅を300pxに固定 */
+            min-width: 900px;
+            /* 例: 幅を300pxに固定 */
+        }
+
+        html {
+            /* transform-origin: top left; */
+            transform: scale(1);
+        }
+    }
+</style>
+
+<script>
+    var app = new Vue({
+        el: "#app",
+        vuetify: new Vuetify(),
+        data: {
+            vueFormData: [],
+            database: null,
+            user: "フー",
+            sortKey: 'index', // ソートするキーを保持するためのデータプロパティ
+            sortDirection: 'asc', // 初期値は昇順
+        },
+        mounted: async function () {
+
+            await fetch('data.json')
+                .then(result => result.json())
+                .then((output) => {
+                    app.vueFormData = [...output];
+                })
+                .catch(err => console.error(err));
+            await fetch('DB.json')
+                .then(result => result.json())
+                .then((output) => {
+                    app.database = e;
+                })
+                .catch(err => console.error(err));
+
+
+
+            // await google.script.run
+            //     .withSuccessHandler(function (e) {
+            //         // console.log("a");
+            //         // console.log(e);
+            //         app.vueFormData = [...e];
+            //     })
+            //     .getData("data");
+            // await google.script.run
+            //     .withSuccessHandler(function (e) {
+            //         // console.log("a");
+            //         // console.log(e);
+            //         app.database = e;
+
+            //         // (async () => {
+            //         //   // ... (await を使ったコード)
+            //         //   console.log(app.database.image)
+            //         //   await google.script.run.withSuccessHandler(function (e2) {
+            //         //     console.log(1)
+            //         //     console.log(e2)
+            //         //     app.imageUrls = e2
+            //         //   }).getFileUrl(app.database.image);
+            //         // })();
+            //     })
+            //     .getDB("data");
+        },
+        methods: {
+            personality: function (key) {
+                if (app.database.personality[key].up === "") {
+                    return false;
+                }
+                return app.database.personality[key];
+            },
+            getImage: function (no) {
+                return (
+                    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" +
+                    no +
+                    ".png"
+                );
+            },
+            getImageDB: function (key) {
+                return "https://lh3.googleusercontent.com/d/" + app.database.image[key];
+            },
+            getSkillColor: function (skill) {
+                var tmp = app.database.subSkill[skill];
+                // console.log(app.database.subSkill[skill]);
+                if (tmp == "gold") {
+                    // console.log("a");
+                    return "amber accent-2";
+                } else if (tmp == "blue") {
+                    return "light blue lighten-4";
+                } else {
+                    return "grey lighten-3";
+                }
+            },
+            changeUser: function (user) {
+                if (user == "フー") {
+                    app.user = "やぐ";
+                } else {
+                    app.user = "フー";
+                }
+            },
+            parseDateOrNumber(value) {
+                const dateRegex = /\d{4}年\d{1,2}月\d{1,2}日/;
+                if (dateRegex.test("20" + value)) {
+                    const [year, month, day] = ("20" + value).match(/\d+/g).map(Number);
+                    return new Date(year, month - 1, day);
+                } else if (!isNaN(parseFloat(value))) {
+                    return parseFloat(value);
+                }
+                return value;
+            },
+
+            sortArray(key) {
+                // クリックされたときにソートを実行するメソッド
+                if (app.sortKey === key) {
+                    app.sortDirection = app.sortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    app.sortKey = key; // 新しいキーをセット
+                    app.sortDirection = 'asc'; // 新しいキーに対して昇順でソートする
+                }
+
+                app.vueFormData = app.vueFormData.slice().sort((a, b) => {
+
+                    const valueA = this.parseDateOrNumber(a[key]);
+                    const valueB = this.parseDateOrNumber(b[key]);
+
+                    if (valueA instanceof Date && valueB instanceof Date) {
+                        return app.sortDirection === 'asc' ? valueA.getTime() - valueB.getTime() : valueB.getTime() - valueA.getTime();
+                    }
+
+                    if (typeof valueA === 'number' && typeof valueB === 'number') {
+                        return app.sortDirection === 'asc' ? valueA - valueB : valueB - valueA;
+
+                    }
+
+                    if (typeof valueA === 'string' && typeof valueB === 'string') {
+                        return app.sortDirection === 'asc' ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
+                    }
+                });
+            },
+        },
+    });
+</script>

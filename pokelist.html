@@ -20,8 +20,8 @@
     <!-- <meta name="viewport" content="width=device-width,initial-scale=1"> -->
 </head>
 
-<body class="fix-width">
-    <div id="app" class="fix-width">
+<body>
+    <div id="app">
         <v-app class="fix-width">
             <v-content class="fix-width">
                 <v-container class="fix-width">
@@ -162,6 +162,51 @@
         </v-app>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+        function resizeIframe() {
+            var windowWidth = window.innerWidth;
+            var windowHeight = window.innerHeight;
+            var contentElement = document.querySelector('html');
+            var body = document.body,
+                html = document.documentElement;
+            var bodyWidth = body.offsetWidth,
+                bodyHeight = body.offsetHeight;
+
+            if (windowWidth < 940) {
+                // windowWidth を利用して新しい値を計算
+                var Value = windowWidth / 940;
+                // CSSに新しい値を適用
+                var contentElement = document.querySelector('html');
+                // contentElement.style.padding = 'calc' + paddingValue;
+                contentElement.style.transformOrigin = 'top left';
+                contentElement.style.transform = 'scale(' + Value + ')';
+
+                var bodyWidth = body.offsetWidth,
+                    bodyHeight = body.offsetHeight;
+
+                var htmlWidth = html.clientWidth || bodyWidth,
+                    htmlHeight = html.clientHeight || bodyHeight;
+
+                var newWidth = htmlWidth * Value,
+                    newHeight = htmlHeight * Value;
+
+                // HTML要素の高さを変更
+                body.style.height = newHeight + 'px';
+                body.style.width = newWidth + 'px';
+
+            } else {
+                contentElement.style.transform = 'initial';
+                body.style.height = 'initial';
+                body.style.width = 'initial';
+            }
+
+        }
+
+
+
+        window.addEventListener('resize', resizeIframe);
+        resizeIframe(); // 初期表示時にも実行
+    </script>
 </body>
 
 </html>
@@ -170,6 +215,8 @@
     .container {
         width: 100%;
         padding: 0;
+        padding-top: 20px;
+        padding-left: 20px;
         margin-right: auto;
         margin-left: auto;
     }
@@ -180,43 +227,11 @@
         }
     }
 
-    .dummy {
-        height: 100px;
-    }
-
     .fix-width {
         /* width: 900px; */
         /* 例: 幅を300pxに固定 */
         min-width: 900px;
         /* 例: 幅を300pxに固定 */
-    }
-
-    @media (orientation: portrait) {
-        .fix-width {
-            /* width: 900px; */
-            /* 例: 幅を300pxに固定 */
-            min-width: 900px;
-            /* 例: 幅を300pxに固定 */
-        }
-
-        html {
-            /* transform-origin: top left; */
-            transform: scale(1);
-        }
-    }
-
-    @media (orientation: landscape) {
-        .fix-width {
-            /* width: 900px; */
-            /* 例: 幅を300pxに固定 */
-            min-width: 900px;
-            /* 例: 幅を300pxに固定 */
-        }
-
-        html {
-            /* transform-origin: top left; */
-            transform: scale(1);
-        }
     }
 </style>
 
@@ -233,13 +248,13 @@
         },
         mounted: async function () {
 
-            await fetch('DB copy.json')
+            await fetch('https://827754.github.io/pmSleep/DB copy.json')
                 .then(result => result.json())
                 .then((output) => {
                     app.database = output;
                 })
                 .catch(err => console.error(err));
-            await fetch('data.json')
+            await fetch('https://827754.github.io/pmSleep/data.json')
                 .then(result => result.json())
                 .then((output) => {
                     app.vueFormData = [...output];
@@ -288,7 +303,7 @@
                 );
             },
             getImageDB: function (key) {
-                return "assets/" + app.database.image[key];
+                return "https://827754.github.io/pmSleep/assets/" + app.database.image[key];
             },
             getSkillColor: function (skill) {
                 var tmp = app.database.subSkill[skill];

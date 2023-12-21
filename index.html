@@ -22,8 +22,8 @@
 
 <body>
     <div id="app">
-        <v-app class="fix-width">
-            <v-content class="fix-width">
+        <v-app>
+            <v-content>
                 <v-container class="fix-width">
 
                     <v-btn depressed v-on:click="changeUser(user)">
@@ -49,9 +49,37 @@
                             v-if="sortKey=='date'&&sortDirection=='desc'">▼</span><span
                             v-if="sortKey!=='date'">{{'　'}}</span>
                     </v-btn>
+                    <v-btn depressed v-on:click="berryBtn.splice(0);ingredientsBtn.splice(0);">
+                        絞り込み解除
+                    </v-btn>
 
-                    <template v-for="(record,index) in vueFormData">
-                        <v-card class="pa-5 ma-5 ml-0 fix-width" v-if="record.foo==user">
+                    <template v-if=" database !== null" class="fix-width">
+                        <v-card class="pa-5 ma-5 ml-0" class="fix-width">
+                            <v-btn-toggle v-model="berryBtn" multiple>
+                                <template v-for="(berry,index) in database.berry">
+                                    <v-btn class="px-0" :value="berry">
+                                        <v-img :src="getImageDB(berry)" max-width="36"></v-img>
+                                        <!-- {{berry}} -->
+                                        </v-img>
+                                    </v-btn>
+                                </template>
+                            </v-btn-toggle>
+                        </v-card>
+                        <v-card class="pa-5 ma-5 ml-0" class="fix-width" @change>
+                            <v-btn-toggle v-model="ingredientsBtn" multiple>
+                                <template v-for="(ingredients,index) in database.ingredients">
+                                    <v-btn class="px-0" :value="ingredients">
+                                        <v-img :src="getImageDB(ingredients)" max-width="36"></v-img>
+                                        <!-- {{ingredients}} -->
+                                        </v-img>
+                                    </v-btn>
+                                </template>
+                            </v-btn-toggle>
+                        </v-card>
+                    </template>
+                    <template v-for="(record,index) in vueFormData" class="fix-width">
+                        <v-card class="pa-5 ma-5 ml-0" v-if="record.foo==user&&multiButtonCheck(record)"
+                            class="fix-width">
                             <v-row>
                                 <v-col cols="3">
                                     <v-layout justify-center>
@@ -228,7 +256,7 @@
     .fix-width {
         /* width: 900px; */
         /* 例: 幅を300pxに固定 */
-        min-width: 900px;
+        min-width: 940px;
         /* 例: 幅を300pxに固定 */
     }
 </style>
@@ -243,6 +271,8 @@
             user: "フー",
             sortKey: 'index', // ソートするキーを保持するためのデータプロパティ
             sortDirection: 'asc', // 初期値は昇順
+            berryBtn: [],
+            ingredientsBtn: []
         },
         mounted: async function () {
 
@@ -250,6 +280,8 @@
                 .then(result => result.json())
                 .then((output) => {
                     app.database = output;
+                    app.database['berry'] = [...output.berry];
+                    app.database['ingredients'] = [...output.ingredients];
                 })
                 .catch(err => console.error(err));
             await fetch('https://script.googleusercontent.com/macros/echo?user_content_key=8AfeX4RP96mTpE15odk--CFNT_GWlVEUF6_FGLfTRbi9RxDGR3SOTJ7CkYCp4hLN0L_t411YVrfvBomV77IPHgKSV8HI-0WQm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnARyiIdeCDuvmmR-sOwAnpEmTfWwE-RbrYGwoGRLqKklDfEgId7cMEIFEoI0ruGwFCzpkvaQDUotEWmyYUxKV2EEwZKnuwGAA9z9Jw9Md8uu&lib=M3h1_1ty_TS9LsWxMNmQenIa5QikDCKxm')
@@ -259,32 +291,6 @@
                 })
                 .catch(err => console.error(err));
 
-
-
-            // await google.script.run
-            //     .withSuccessHandler(function (e) {
-            //         // console.log("a");
-            //         // console.log(e);
-            //         app.vueFormData = [...e];
-            //     })
-            //     .getData("data");
-            // await google.script.run
-            //     .withSuccessHandler(function (e) {
-            //         // console.log("a");
-            //         // console.log(e);
-            //         app.database = e;
-
-            //         // (async () => {
-            //         //   // ... (await を使ったコード)
-            //         //   console.log(app.database.image)
-            //         //   await google.script.run.withSuccessHandler(function (e2) {
-            //         //     console.log(1)
-            //         //     console.log(e2)
-            //         //     app.imageUrls = e2
-            //         //   }).getFileUrl(app.database.image);
-            //         // })();
-            //     })
-            //     .getDB("data");
         },
         methods: {
             personality: function (key) {
@@ -302,6 +308,12 @@
             },
             getImageDB: function (key) {
                 return "https://827754.github.io/pmSleep/assets/" + app.database.image[key];
+            },
+            multiButtonCheck: function (record) {
+                if (app.berryBtn.length == 0 && app.ingredientsBtn.length == 0) {
+                    return true
+                }
+                return Object.values(record).some(value => app.berryBtn.includes(value) | app.ingredientsBtn.includes(value));
             },
             getSkillColor: function (skill) {
                 var tmp = app.database.subSkill[skill];

@@ -96,6 +96,11 @@
                                 <v-col>
                                     <v-row>
                                         <v-col cols="12" class="pa-0 ma-0 mb-2">
+                                            <span>タイプ</span>
+                                            <v-btn depressed :color="getTypeColor(record.type)">
+                                                {{record.type}}
+                                            </v-btn>
+                                            <span>きのみ</span>
                                             <span>メインスキル</span>
                                             <v-btn depressed>
                                                 {{record.skill}}
@@ -325,6 +330,17 @@
                     return "light blue lighten-4";
                 } else {
                     return "grey lighten-3";
+                }
+            },
+            getTypeColor: function (type) {
+                var tmp = app.database.type[type];
+                if (tmp == "orange") {
+                    // console.log("a");
+                    return "orange lighten-1";
+                } else if (tmp == "green") {
+                    return "green";
+                } else {
+                    return "blue";
                 }
             },
             changeUser: function (user) {

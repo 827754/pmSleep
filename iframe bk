@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>ポケスリ管理</title>
+    <!-- <meta name="description" content="ディスクリプションを入力"> -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+
+    <!-- Vue.js -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.js"></script> -->
+    <!-- <link rel="stylesheet" href="style.css"> -->
+
+
+    <!-- <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet"> -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/@mdi/font@3.x/css/materialdesignicons.min.css" rel="stylesheet"> -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet"> -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"> -->
+    <!-- <meta name="viewport" content="initial-scale=0.8, maximum-scale=0.1, minimum-scale=0.1, user-scalable=yes width=1000px, target-densitydpi=device-dpi"> -->
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1"> -->
+</head>
+
+<body>
+    <div class="iframe-wrap">
+        <iframe
+            src="https://script.google.com/macros/s/AKfycbwbXUsAVnaQFW9K9B7X0l5Aiw2ULpPTBUFR6NoHWFkNSzFCwncNNQRf-rIINDbwojA9eg/exec"
+            frameborder="0">
+        </iframe>
+    </div>
+    <script>
+        function resizeIframe() {
+            var windowWidth = window.innerWidth;
+            var windowHeight = window.innerHeight;
+
+            // windowWidth を利用して新しい値を計算
+            var paddingValue = 'calc(' + windowHeight + ' / ' +  windowWidth + ' * 100%) 0 0';
+
+            // CSSに新しい値を適用
+            var contentElement = document.querySelector('.iframe-wrap');
+            // contentElement.style.padding = 'calc' + paddingValue;
+            contentElement.style.padding = paddingValue;
+
+        }
+
+        window.addEventListener('resize', resizeIframe);
+        resizeIframe(); // 初期表示時にも実行
+    </script>
+</body>
+
+
+<style>
+    .iframe-wrap {
+        position: relative;
+        width: 100%;
+        /* padding: calc(4 / 3 * 100%) 0 0; */
+    }
+
+    /* @media (orientation: portrait) {
+        .iframe-wrap {
+            position: relative;
+            width: 100%;
+            padding: calc(4 / 3 * 100%) 0 0;
+        }
+    }
+
+    @media (orientation: landscape) {
+        .iframe-wrap {
+            position: relative;
+            width: 100%;
+            padding: calc(3 / 4 * 100%) 0 0;
+        }
+    } */
+
+    /* .iframe-wrap {
+        position: relative;
+        width: 100%;
+        /* padding: calc(480 / 854 * 100%) 0 0; */
+    /* 高さと横幅の数字には単位は入れません。 */
+    /* } */
+
+    .iframe-wrap iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        /* height: 90vh; */
+    }
+</style>

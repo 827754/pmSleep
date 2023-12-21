@@ -233,16 +233,16 @@
         },
         mounted: async function () {
 
+            await fetch('DB copy.json')
+                .then(result => result.json())
+                .then((output) => {
+                    app.database = output;
+                })
+                .catch(err => console.error(err));
             await fetch('data.json')
                 .then(result => result.json())
                 .then((output) => {
                     app.vueFormData = [...output];
-                })
-                .catch(err => console.error(err));
-            await fetch('DB.json')
-                .then(result => result.json())
-                .then((output) => {
-                    app.database = output;
                 })
                 .catch(err => console.error(err));
 
@@ -288,7 +288,7 @@
                 );
             },
             getImageDB: function (key) {
-                return "https://lh3.googleusercontent.com/d/" + app.database.image[key];
+                return "assets/" + app.database.image[key];
             },
             getSkillColor: function (skill) {
                 var tmp = app.database.subSkill[skill];

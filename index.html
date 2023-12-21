@@ -55,26 +55,37 @@
 
                     <template v-if=" database !== null" class="fix-width">
                         <v-card class="pa-5 ma-5 ml-0" class="fix-width">
-                            <v-btn-toggle v-model="berryBtn" multiple>
-                                <template v-for="(berry,index) in database.berry">
-                                    <v-btn class="px-0" :value="berry">
-                                        <v-img :src="getImageDB(berry)" max-width="36"></v-img>
-                                        <!-- {{berry}} -->
-                                        </v-img>
-                                    </v-btn>
-                                </template>
-                            </v-btn-toggle>
-                        </v-card>
-                        <v-card class="pa-5 ma-5 ml-0" class="fix-width" @change>
-                            <v-btn-toggle v-model="ingredientsBtn" multiple>
-                                <template v-for="(ingredients,index) in database.ingredients">
-                                    <v-btn class="px-0" :value="ingredients">
-                                        <v-img :src="getImageDB(ingredients)" max-width="36"></v-img>
-                                        <!-- {{ingredients}} -->
-                                        </v-img>
-                                    </v-btn>
-                                </template>
-                            </v-btn-toggle>
+                            <div class="mb-2">
+                                <v-btn-toggle v-model="typeBtn" multiple dense>
+                                    <template v-for="(value,key) in database.type">
+                                        <v-btn class="px-5 white--text" :value="key" :color="getTypeColor(key)">
+                                            {{key}}
+                                        </v-btn>
+                                    </template>
+                                </v-btn-toggle>
+                            </div>
+                            <div class="mb-2">
+                                <v-btn-toggle v-model="berryBtn" multiple>
+                                    <template v-for="(berry,index) in database.berry">
+                                        <v-btn class="px-0" :value="berry">
+                                            <v-img :src="getImageDB(berry)" max-width="36"></v-img>
+                                            <!-- {{berry}} -->
+                                            </v-img>
+                                        </v-btn>
+                                    </template>
+                                </v-btn-toggle>
+                            </div>
+                            <div>
+                                <v-btn-toggle v-model="ingredientsBtn" multiple>
+                                    <template v-for="(ingredients,index) in database.ingredients">
+                                        <v-btn class="px-0" :value="ingredients">
+                                            <v-img :src="getImageDB(ingredients)" max-width="36"></v-img>
+                                            <!-- {{ingredients}} -->
+                                            </v-img>
+                                        </v-btn>
+                                    </template>
+                                </v-btn-toggle>
+                            </div>
                         </v-card>
                     </template>
                     <template v-for="(record,index) in vueFormData" class="fix-width">
@@ -96,11 +107,10 @@
                                 <v-col>
                                     <v-row>
                                         <v-col cols="12" class="pa-0 ma-0 mb-2">
-                                            <span>タイプ</span>
-                                            <v-btn depressed :color="getTypeColor(record.type)">
+                                            <!-- <span>タイプ</span> -->
+                                            <v-btn depressed :color="getTypeColor(record.type)" class="white--text">
                                                 {{record.type}}
                                             </v-btn>
-                                            <span>きのみ</span>
                                             <span>メインスキル</span>
                                             <v-btn depressed>
                                                 {{record.skill}}
@@ -276,6 +286,7 @@
             user: "フー",
             sortKey: 'index', // ソートするキーを保持するためのデータプロパティ
             sortDirection: 'asc', // 初期値は昇順
+            typeBtn: [],
             berryBtn: [],
             ingredientsBtn: []
         },
@@ -315,10 +326,24 @@
                 return "https://827754.github.io/pmSleep/assets/" + app.database.image[key];
             },
             multiButtonCheck: function (record) {
-                if (app.berryBtn.length == 0 && app.ingredientsBtn.length == 0) {
+                if (app.berryBtn.length == 0 && app.ingredientsBtn.length == 0 && app.typeBtn.length == 0) {
                     return true
                 }
-                return Object.values(record).some(value => app.berryBtn.includes(value) | app.ingredientsBtn.includes(value));
+
+                var multiValid = Object.values(record).some(value =>
+                    app.berryBtn.includes(value) |
+                    app.ingredientsBtn.includes(value));
+
+                var typeValid = true;
+                if (app.typeBtn.length !== 0) {
+                    typeValid = Object.values(record).some(value =>
+                        app.typeBtn.includes(value));
+                    if (app.ingredientsBtn.length == 0 && app.berryBtn.length == 0) {
+                        multiValid = true
+                    }
+                }
+
+                return multiValid && typeValid
             },
             getSkillColor: function (skill) {
                 var tmp = app.database.subSkill[skill];
@@ -336,7 +361,7 @@
                 var tmp = app.database.type[type];
                 if (tmp == "orange") {
                     // console.log("a");
-                    return "orange lighten-1";
+                    return "orange darken-2";
                 } else if (tmp == "green") {
                     return "green";
                 } else {

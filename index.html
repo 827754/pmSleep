@@ -58,7 +58,7 @@
                             <div class="mb-2">
                                 <v-btn-toggle v-model="typeBtn" multiple dense>
                                     <template v-for="(value,key) in database.type">
-                                        <v-btn class="px-5 white--text" :value="key" :color="getTypeColor(key)">
+                                        <v-btn class="px-5" :value="key" >
                                             {{key}}
                                         </v-btn>
                                     </template>

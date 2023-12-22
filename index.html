@@ -53,39 +53,65 @@
                         絞り込み解除
                     </v-btn>
 
-                    <template v-if=" database !== null" class="fix-width">
-                        <v-card class="pa-5 ma-5 ml-0" class="fix-width">
-                            <div class="mb-2">
-                                <v-btn-toggle v-model="typeBtn" multiple dense>
-                                    <template v-for="(value,key) in database.type">
-                                        <v-btn class="px-5" :value="key" >
-                                            {{key}}
-                                        </v-btn>
-                                    </template>
-                                </v-btn-toggle>
-                            </div>
-                            <div class="mb-2">
-                                <v-btn-toggle v-model="berryBtn" multiple>
-                                    <template v-for="(berry,index) in database.berry">
-                                        <v-btn class="px-0" :value="berry">
-                                            <v-img :src="getImageDB(berry)" max-width="36"></v-img>
-                                            <!-- {{berry}} -->
-                                            </v-img>
-                                        </v-btn>
-                                    </template>
-                                </v-btn-toggle>
-                            </div>
-                            <div>
-                                <v-btn-toggle v-model="ingredientsBtn" multiple>
-                                    <template v-for="(ingredients,index) in database.ingredients">
-                                        <v-btn class="px-0" :value="ingredients">
-                                            <v-img :src="getImageDB(ingredients)" max-width="36"></v-img>
-                                            <!-- {{ingredients}} -->
-                                            </v-img>
-                                        </v-btn>
-                                    </template>
-                                </v-btn-toggle>
-                            </div>
+
+
+                    <template v-if="database !== null" class="fix-width">
+                        <v-card class="pa-0 ma-5 ml-0" class="fix-width" flat>
+                            <v-expansion-panels>
+                                <v-expansion-panel>
+                                    <v-expansion-panel-header class="">
+                                        <div class="px-0 d-flex flex-row">
+                                            <v-icon>mdi-magnify</v-icon><span class="pt-1 pl-1">絞り込み</span>
+                                        </div>
+                                    </v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        <div class="mb-2">
+                                            <v-btn-toggle v-model="typeBtn" multiple dense tile borderless>
+                                                <template v-for="(value,key) in database.type">
+                                                    <v-btn class="px-5 mr-1" :value="key">
+                                                        {{key}}
+                                                    </v-btn>
+                                                </template>
+                                            </v-btn-toggle>
+                                        </div>
+                                        <div class="mb-2">
+                                            <v-btn-toggle v-model="berryBtn" multiple>
+                                                <template v-for="(berry,index) in database.berry">
+                                                    <v-btn class="px-0" :value="berry">
+                                                        <v-img :src="getImageDB(berry)" max-width="36"></v-img>
+                                                        <!-- {{berry}} -->
+                                                        </v-img>
+                                                    </v-btn>
+                                                </template>
+                                            </v-btn-toggle>
+                                        </div>
+                                        <div class="mb-2">
+                                            <v-btn-toggle v-model="ingredientsBtn" multiple>
+                                                <template v-for="(ingredients,index) in database.ingredients">
+                                                    <v-btn class="px-0" :value="ingredients">
+                                                        <v-img :src="getImageDB(ingredients)" max-width="36"></v-img>
+                                                        <!-- {{ingredients}} -->
+                                                        </v-img>
+                                                    </v-btn>
+                                                </template>
+                                            </v-btn-toggle>
+                                        </div>
+                                        <div>
+                                            <v-btn-toggle v-model="subSkillBtn" multiple dense
+                                                class="px-0 d-flex flex-wrap" tile borderless>
+                                                <template v-for="(value,key) in database.subSkill">
+                                                    <v-btn class="px-2 mr-1 mb-1" :value="key">
+                                                        <v-img :src="getImageDB(key)" max-width="74"></v-img>
+                                                        <!-- {{berry}} -->
+                                                        </v-img>
+                                                    </v-btn>
+                                                </template>
+                                            </v-btn-toggle>
+                                        </div>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                            </v-expansion-panels>
+
                         </v-card>
                     </template>
                     <template v-for="(record,index) in vueFormData" class="fix-width">
@@ -279,13 +305,18 @@
 <script>
     var app = new Vue({
         el: "#app",
-        vuetify: new Vuetify(),
+        vuetify: new Vuetify({
+            icons: {
+                iconfont: 'mdi'
+            }
+        }),
         data: {
             vueFormData: [],
             database: null,
             user: "フー",
             sortKey: 'index', // ソートするキーを保持するためのデータプロパティ
             sortDirection: 'asc', // 初期値は昇順
+            subSkillBtn: [],
             typeBtn: [],
             berryBtn: [],
             ingredientsBtn: []
@@ -326,19 +357,27 @@
                 return "https://827754.github.io/pmSleep/assets/" + app.database.image[key];
             },
             multiButtonCheck: function (record) {
-                if (app.berryBtn.length == 0 && app.ingredientsBtn.length == 0 && app.typeBtn.length == 0) {
+                if (app.berryBtn.length == 0 &&
+                    app.ingredientsBtn.length == 0 &&
+                    app.typeBtn.length == 0 &&
+                    app.subSkillBtn.length == 0) {
                     return true
                 }
 
                 var multiValid = Object.values(record).some(value =>
                     app.berryBtn.includes(value) |
-                    app.ingredientsBtn.includes(value));
+                    app.ingredientsBtn.includes(value) |
+                    app.subSkillBtn.includes(value)
+                );
 
                 var typeValid = true;
                 if (app.typeBtn.length !== 0) {
                     typeValid = Object.values(record).some(value =>
                         app.typeBtn.includes(value));
-                    if (app.ingredientsBtn.length == 0 && app.berryBtn.length == 0) {
+                    if (app.ingredientsBtn.length == 0 &&
+                        app.berryBtn.length == 0 &&
+                        app.subSkillBtn.length == 0
+                    ) {
                         multiValid = true
                     }
                 }

@@ -120,9 +120,12 @@
 
                         </v-card>
                     </template>
-                    <template v-for="(record,index) in vueFormData" class="fix-width">
-                        <v-card class="pa-5 ma-5 ml-0" v-if="record.foo==user&&multiButtonCheck(record)"
-                            class="fix-width">
+                    <div class="text-center">
+                        <v-pagination v-model="page" :length="pageLength"></v-pagination>
+                    </div>
+                    <template v-for="(record,index) in displayDataSet()" class="fix-width">
+                        <!-- <v-card class="pa-5 ma-5 ml-0" v-if="record.foo==user&&multiButtonCheck(record)" -->
+                        <v-card class="pa-5 ma-5 ml-0" class="fix-width">
                             <v-row>
                                 <v-col cols="3">
                                     <v-layout justify-center>
@@ -230,7 +233,10 @@
                             </v-row>
                         </v-card>
                     </template>
-                    <div class="dummy">
+                    <div class="text-center mb-5">
+                        <v-pagination v-model="page" :length="pageLength" @input="pageUP"></v-pagination>
+                    </div>
+                    <div class="my-5">
 
                     </div>
                 </v-container>
@@ -319,6 +325,7 @@
         }),
         data: {
             vueFormData: [],
+            displayData: [],
             database: null,
             user: "フー",
             sortKey: 'index', // ソートするキーを保持するためのデータプロパティ
@@ -326,7 +333,10 @@
             subSkillBtn: [],
             typeBtn: [],
             berryBtn: [],
-            ingredientsBtn: []
+            ingredientsBtn: [],
+            page: 1,
+            pageLength: 0,
+            pageSize: 20,
         },
         mounted: async function () {
 
@@ -357,6 +367,18 @@
                     return false;
                 }
                 return app.database.personality[key];
+            },
+            displayDataSet: function () {
+                try {
+                    var tmp = app.vueFormData.filter(e => e.foo == app.user && app.multiButtonCheck(e))
+                    app.pageLength = Math.ceil(tmp.length / app.pageSize);
+                    return tmp.slice(app.pageSize * (app.page - 1), app.pageSize * (app.page));                 
+                } catch (error) {
+                    
+                }
+            },
+            pageUP: function () {
+                window.scroll(0, 0);
             },
             subSkillValue: function (record) {
                 var subSkillValue = 10
@@ -490,7 +512,7 @@
                 } else {
                     app.sortKey = key; // 新しいキーをセット
                     app.sortDirection = 'asc'; // 新しいキーに対して昇順でソートする
-                    if(key=="point"){
+                    if (key == "point") {
                         app.sortDirection = 'desc'
                     }
                 }
@@ -505,8 +527,8 @@
                     //     valueB = app.subSkillValue(b) + app.personalityValue(b);
 
                     // } else {
-                        valueA = app.parseDateOrNumber(a[key]);
-                        valueB = app.parseDateOrNumber(b[key]);
+                    valueA = app.parseDateOrNumber(a[key]);
+                    valueB = app.parseDateOrNumber(b[key]);
                     // }
 
 

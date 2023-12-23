@@ -214,7 +214,7 @@
         "スキル": "blue",
         "食材": "orange"
     },
-    "personalityValue":{
+    "personalityData":{
         "おてつだいスピード":{
             "up":"1.1",
             "down":"1.1",
@@ -251,7 +251,7 @@
             "食材":"4"
         }
     },
-    "subSkillValue":{
+    "subSkillData":{
         "おてつだいボーナス":{
             "きのみ":"10",
             "スキル":"10",

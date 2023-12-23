@@ -223,7 +223,7 @@
                                     <v-row>
                                         <v-col cols="12" class="pa-0 ma-0">
                                             <span
-                                                v-if="record.ingredients0">出会った日:{{record.date}}{{'　'}}簡易査定:{{(subSkillValue(record)+personalityValue(record))}}</span>
+                                                v-if="record.ingredients0">出会った日:{{record.date}}{{'　'}}簡易査定:{{record.point}}</span>
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -342,6 +342,11 @@
                 .then(result => result.json())
                 .then((output) => {
                     app.vueFormData = [...output];
+                    app.vueFormData.forEach((e, i) => {
+                        app.vueFormData[i]['point'] = app.subSkillValue(e) + app.personalityValue(e);
+                    }
+                    )
+
                 })
                 .catch(err => console.error(err));
 
@@ -367,7 +372,7 @@
                         subSkillValue = subSkillValue + (tmp * 0)
                     }
                 }
-                return parseInt(subSkillValue*1.1, 10)
+                return parseInt(subSkillValue * 1.1, 10)
             },
             personalityValue: function (record) {
                 var personalityValue = 10
@@ -382,7 +387,7 @@
                         personalityValue = personalityValue - tmp
                     }
                 }
-                return parseInt(personalityValue*0.9, 10)
+                return parseInt(personalityValue * 0.9, 10)
             },
             getImage: function (no) {
                 return (
@@ -485,21 +490,24 @@
                 } else {
                     app.sortKey = key; // 新しいキーをセット
                     app.sortDirection = 'asc'; // 新しいキーに対して昇順でソートする
+                    if(key=="point"){
+                        app.sortDirection = 'desc'
+                    }
                 }
 
                 app.vueFormData = app.vueFormData.slice().sort((a, b) => {
-                    
+
                     let valueA;
                     let valueB;
-                    
-                    if (key == "point") {
-                        valueA = app.subSkillValue(a)+app.personalityValue(a);
-                        valueB = app.subSkillValue(b)+app.personalityValue(b);
-                        
-                    }else{
+
+                    // if (key == "point") {
+                    //     valueA = app.subSkillValue(a) + app.personalityValue(a);
+                    //     valueB = app.subSkillValue(b) + app.personalityValue(b);
+
+                    // } else {
                         valueA = app.parseDateOrNumber(a[key]);
                         valueB = app.parseDateOrNumber(b[key]);
-                    }
+                    // }
 
 
                     if (valueA instanceof Date && valueB instanceof Date) {

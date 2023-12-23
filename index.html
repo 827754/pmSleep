@@ -123,115 +123,120 @@
                     <div class="text-center">
                         <v-pagination v-model="page" :length="pageLength"></v-pagination>
                     </div>
-                    <template v-for="(record,index) in displayDataSet()" class="fix-width">
-                        <!-- <v-card class="pa-5 ma-5 ml-0" v-if="record.foo==user&&multiButtonCheck(record)" -->
-                        <v-card class="pa-5 ma-5 ml-0" class="fix-width">
-                            <v-row>
-                                <v-col cols="3">
-                                    <v-layout justify-center>
-                                        <v-avatar color="red" size="35" class="absolute top-0 left-0">
-                                            <span class="white--text text-body">{{record.foo}}</span>
-                                        </v-avatar>
-                                        <v-img :src="getImage(record.no)" max-width="180"></v-img>
-                                    </v-layout>
-                                    <v-sheet class="text-h6 text-center">
-                                        No.{{record.no}} : {{record.pokemon}}
-                                    </v-sheet>
-                                </v-col>
-                                <!-- </v-col> -->
-                                <v-col>
-                                    <v-row>
-                                        <v-col cols="12" class="pa-0 ma-0 mb-2">
-                                            <!-- <span>タイプ</span> -->
-                                            <v-btn depressed :color="getTypeColor(record.type)" class="white--text">
-                                                {{record.type}}
-                                            </v-btn>
-                                            <span>メインスキル</span>
-                                            <v-btn depressed>
-                                                {{record.skill}}
-                                            </v-btn>
-                                            <span>きのみ</span>
-                                            <v-btn depressed>
-                                                <v-img :src="getImageDB(record.berry)" max-width="25"></v-img>
-                                                {{record.berry}}
-                                                </v-img>
-                                            </v-btn>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row>
-                                        <v-col cols="12" class="pa-0 ma-0">
-                                            <span>Lv10</span>
-                                            <v-chip class="ma-2" :color="getSkillColor(record.sub10)" label>
-                                                {{record.sub10}}
-                                            </v-chip>
-                                            <span>Lv25</span>
-                                            <v-chip class="ma-2" :color="getSkillColor(record.sub25)" label>
-                                                {{record.sub25}}
-                                            </v-chip>
-                                            <span>Lv50</span>
-                                            <v-chip class="ma-2" :color="getSkillColor(record.sub50)" label>
-                                                {{record.sub50}}
-                                            </v-chip>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row>
-                                        <v-col cols="12" class="pa-0 ma-0">
-                                            <span>せいかく:{{record.personality}}</span>
-                                            <!-- <v-chip v-if="record.personality" class="ma-2" color="black" outlined>
+                    <template v-if="vueFormData.length !== 0">
+                        <template v-for="(record,index) in displayDataSet()" class="fix-width">
+                            <!-- <v-card class="pa-5 ma-5 ml-0" v-if="record.foo==user&&multiButtonCheck(record)" -->
+                            <v-card class="pa-5 ma-5 ml-0" class="fix-width">
+                                <v-row>
+                                    <v-col cols="3">
+                                        <v-layout justify-center>
+                                            <v-avatar color="red" size="35" class="absolute top-0 left-0">
+                                                <span class="white--text text-body">{{record.foo}}</span>
+                                            </v-avatar>
+                                            <v-img :src="getImage(record.no)" max-width="180"></v-img>
+                                        </v-layout>
+                                        <v-sheet class="text-h6 text-center">
+                                            No.{{record.no}} : {{record.pokemon}}
+                                        </v-sheet>
+                                    </v-col>
+                                    <!-- </v-col> -->
+                                    <v-col>
+                                        <v-row>
+                                            <v-col cols="12" class="pa-0 ma-0 mb-2">
+                                                <!-- <span>タイプ</span> -->
+                                                <v-btn depressed :color="getTypeColor(record.type)" class="white--text">
+                                                    {{record.type}}
+                                                </v-btn>
+                                                <span>メインスキル</span>
+                                                <v-btn depressed>
+                                                    {{record.skill}}
+                                                </v-btn>
+                                                <span>きのみ</span>
+                                                <v-btn depressed>
+                                                    <v-img :src="getImageDB(record.berry)" max-width="25"></v-img>
+                                                    {{record.berry}}
+                                                    </v-img>
+                                                </v-btn>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row>
+                                            <v-col cols="12" class="pa-0 ma-0">
+                                                <span>Lv10</span>
+                                                <v-chip class="ma-2" :color="getSkillColor(record.sub10)" label>
+                                                    {{record.sub10}}
+                                                </v-chip>
+                                                <span>Lv25</span>
+                                                <v-chip class="ma-2" :color="getSkillColor(record.sub25)" label>
+                                                    {{record.sub25}}
+                                                </v-chip>
+                                                <span>Lv50</span>
+                                                <v-chip class="ma-2" :color="getSkillColor(record.sub50)" label>
+                                                    {{record.sub50}}
+                                                </v-chip>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row>
+                                            <v-col cols="12" class="pa-0 ma-0">
+                                                <span>せいかく:{{record.personality}}</span>
+                                                <!-- <v-chip v-if="record.personality" class="ma-2" color="black" outlined>
                                                 {{record.personality}}
                                             </v-chip> -->
-                                            <span v-if="personality(record.personality)">
-                                                <span v-if="personality(record.personality).up"
-                                                    class="text-h5 red--text">▲▲</span>
-                                                <v-chip v-if="personality(record.personality).up" class="ma-2"
-                                                    color="red" outlined label>
-                                                    {{personality(record.personality).up}}
+                                                <span v-if="personality(record.personality)">
+                                                    <span v-if="personality(record.personality).up"
+                                                        class="text-h5 red--text">▲▲</span>
+                                                    <v-chip v-if="personality(record.personality).up" class="ma-2"
+                                                        color="red" outlined label>
+                                                        {{personality(record.personality).up}}
+                                                    </v-chip>
+                                                    <span v-if="personality(record.personality).down"
+                                                        class="text-h5 primary--text">▼▼</span>
+                                                    <v-chip v-if="personality(record.personality).down" class="ma-2"
+                                                        color="primary" outlined label>
+                                                        {{personality(record.personality).down}}
+                                                    </v-chip>
+                                                </span>
+                                                <span v-else>
+                                                    <v-chip class="ma-2" color="green" outlined label>
+                                                        補正無し
+                                                    </v-chip>
+                                                </span>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row>
+                                            <v-col cols="12" class="pa-0 ma-0">
+                                                <span v-if="record.ingredients0" class="px-0">Lv0</span>
+                                                <v-chip v-if="record.ingredients0" class="ma-2 ml-1 pl-0 pr-2"
+                                                    color="grey-lighten-4" outlined label>
+                                                    <v-img :src="getImageDB(record.ingredients0)"
+                                                        max-width="25"></v-img>
+                                                    {{record.ingredients0}}
                                                 </v-chip>
-                                                <span v-if="personality(record.personality).down"
-                                                    class="text-h5 primary--text">▼▼</span>
-                                                <v-chip v-if="personality(record.personality).down" class="ma-2"
-                                                    color="primary" outlined label>
-                                                    {{personality(record.personality).down}}
+                                                <span v-if="record.ingredients30" class="px-0">Lv30</span>
+                                                <v-chip v-if="record.ingredients30" class="ma-2 ml-1 pl-0 pr-2"
+                                                    color="grey-lighten-4" outlined label>
+                                                    <v-img :src="getImageDB(record.ingredients30)"
+                                                        max-width="25"></v-img>
+                                                    {{record.ingredients30}}
                                                 </v-chip>
-                                            </span>
-                                            <span v-else>
-                                                <v-chip class="ma-2" color="green" outlined label>
-                                                    補正無し
+                                                <span v-if="record.ingredients60" class="px-0">Lv60</span>
+                                                <v-chip v-if="record.ingredients60" class="ma-2 ml-1 pl-0 pr-2"
+                                                    color="grey-lighten-4" outlined label>
+                                                    <v-img :src="getImageDB(record.ingredients60)"
+                                                        max-width="25"></v-img>
+                                                    {{record.ingredients60}}
                                                 </v-chip>
-                                            </span>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row>
-                                        <v-col cols="12" class="pa-0 ma-0">
-                                            <span v-if="record.ingredients0" class="px-0">Lv0</span>
-                                            <v-chip v-if="record.ingredients0" class="ma-2 ml-1 pl-0 pr-2"
-                                                color="grey-lighten-4" outlined label>
-                                                <v-img :src="getImageDB(record.ingredients0)" max-width="25"></v-img>
-                                                {{record.ingredients0}}
-                                            </v-chip>
-                                            <span v-if="record.ingredients30" class="px-0">Lv30</span>
-                                            <v-chip v-if="record.ingredients30" class="ma-2 ml-1 pl-0 pr-2"
-                                                color="grey-lighten-4" outlined label>
-                                                <v-img :src="getImageDB(record.ingredients30)" max-width="25"></v-img>
-                                                {{record.ingredients30}}
-                                            </v-chip>
-                                            <span v-if="record.ingredients60" class="px-0">Lv60</span>
-                                            <v-chip v-if="record.ingredients60" class="ma-2 ml-1 pl-0 pr-2"
-                                                color="grey-lighten-4" outlined label>
-                                                <v-img :src="getImageDB(record.ingredients60)" max-width="25"></v-img>
-                                                {{record.ingredients60}}
-                                            </v-chip>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row>
-                                        <v-col cols="12" class="pa-0 ma-0">
-                                            <span
-                                                v-if="record.ingredients0">出会った日:{{record.date}}{{'　'}}簡易査定:{{record.point}}</span>
-                                        </v-col>
-                                    </v-row>
-                                </v-col>
-                            </v-row>
-                        </v-card>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row>
+                                            <v-col cols="12" class="pa-0 ma-0">
+                                                <span
+                                                    v-if="record.ingredients0">出会った日:{{record.date}}{{'　'}}簡易査定:{{record.point}}</span>
+                                            </v-col>
+                                        </v-row>
+                                    </v-col>
+                                </v-row>
+                            </v-card>
+                        </template>
                     </template>
                     <div class="text-center mb-5">
                         <v-pagination v-model="page" :length="pageLength" @input="pageUP"></v-pagination>
@@ -369,13 +374,9 @@
                 return app.database.personality[key];
             },
             displayDataSet: function () {
-                try {
-                    var tmp = app.vueFormData.filter(e => e.foo == app.user && app.multiButtonCheck(e))
-                    app.pageLength = Math.ceil(tmp.length / app.pageSize);
-                    return tmp.slice(app.pageSize * (app.page - 1), app.pageSize * (app.page));                 
-                } catch (error) {
-                    
-                }
+                var tmp = app.vueFormData.filter(e => e.foo == app.user && app.multiButtonCheck(e))
+                app.pageLength = Math.ceil(tmp.length / app.pageSize);
+                return tmp.slice(app.pageSize * (app.page - 1), app.pageSize * (app.page));
             },
             pageUP: function () {
                 window.scroll(0, 0);

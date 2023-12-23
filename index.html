@@ -49,7 +49,8 @@
                             v-if="sortKey=='date'&&sortDirection=='desc'">▼</span><span
                             v-if="sortKey!=='date'">{{'　'}}</span>
                     </v-btn>
-                    <v-btn depressed v-on:click="berryBtn.splice(0);ingredientsBtn.splice(0);typeBtn.splice(0);">
+                    <v-btn depressed
+                        v-on:click="berryBtn.splice(0);ingredientsBtn.splice(0);typeBtn.splice(0);subSkillBtn.splice(0);">
                         絞り込み解除
                     </v-btn>
 
@@ -357,6 +358,21 @@
                 return "https://827754.github.io/pmSleep/assets/" + app.database.image[key];
             },
             multiButtonCheck: function (record) {
+                var allBtn = [app.berryBtn, app.ingredientsBtn, app.typeBtn, app.subSkillBtn]
+
+                var allValid = new Array(allBtn.length)
+                allValid.fill(true)
+
+                allBtn.forEach((e, i) => {
+                    if (e.length !== 0) {
+                        allValid[i] = Object.values(record).some(value =>
+                            e.includes(value));
+                    }
+                });
+
+                return allValid.every(e => e == true)
+            },
+            multiButtonCheck2: function (record) {
                 if (app.berryBtn.length == 0 &&
                     app.ingredientsBtn.length == 0 &&
                     app.typeBtn.length == 0 &&

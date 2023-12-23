@@ -49,6 +49,11 @@
                             v-if="sortKey=='date'&&sortDirection=='desc'">▼</span><span
                             v-if="sortKey!=='date'">{{'　'}}</span>
                     </v-btn>
+                    <v-btn depressed v-on:click="sortArray('point')">
+                        査定<span v-if="sortKey=='point'&&sortDirection=='asc'">▲</span><span
+                            v-if="sortKey=='point'&&sortDirection=='desc'">▼</span><span
+                            v-if="sortKey!=='point'">{{'　'}}</span>
+                    </v-btn>
                     <v-btn depressed
                         v-on:click="berryBtn.splice(0);ingredientsBtn.splice(0);typeBtn.splice(0);subSkillBtn.splice(0);">
                         絞り込み解除
@@ -168,10 +173,10 @@
                                     </v-row>
                                     <v-row>
                                         <v-col cols="12" class="pa-0 ma-0">
-                                            <span>せいかく:</span>
-                                            <v-chip v-if="record.personality" class="ma-2" color="black" outlined>
+                                            <span>せいかく:{{record.personality}}</span>
+                                            <!-- <v-chip v-if="record.personality" class="ma-2" color="black" outlined>
                                                 {{record.personality}}
-                                            </v-chip>
+                                            </v-chip> -->
                                             <span v-if="personality(record.personality)">
                                                 <span v-if="personality(record.personality).up"
                                                     class="text-h5 red--text">▲▲</span>
@@ -217,7 +222,8 @@
                                     </v-row>
                                     <v-row>
                                         <v-col cols="12" class="pa-0 ma-0">
-                                            <span v-if="record.ingredients0">出会った日:{{record.date}}</span>
+                                            <span
+                                                v-if="record.ingredients0">出会った日:{{record.date}}{{'　'}}簡易査定:{{(subSkillValue(record)+personalityValue(record))}}</span>
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -347,6 +353,37 @@
                 }
                 return app.database.personality[key];
             },
+            subSkillValue: function (record) {
+                var subSkillValue = 10
+                for (const [key, obj] of Object.entries(app.database.subSkillData)) {
+                    var tmp = Number(obj[record.type])
+                    if (key == record.sub10) {
+                        subSkillValue = subSkillValue + tmp
+                    }
+                    if (key == record.sub25) {
+                        subSkillValue = subSkillValue + tmp
+                    }
+                    if (key == record.sub50) {
+                        subSkillValue = subSkillValue + (tmp * 0)
+                    }
+                }
+                return parseInt(subSkillValue*1.1, 10)
+            },
+            personalityValue: function (record) {
+                var personalityValue = 10
+                for (const [key, obj] of Object.entries(app.database.personalityData)) {
+                    var tmp = Number(obj[record.type])
+                    if (key == app.database.personality[record.personality].up) {
+                        tmp = tmp * Number(obj.up)
+                        personalityValue = personalityValue + tmp
+                    }
+                    if (key == app.database.personality[record.personality].down) {
+                        tmp = tmp * Number(obj.down)
+                        personalityValue = personalityValue - tmp
+                    }
+                }
+                return parseInt(personalityValue*0.9, 10)
+            },
             getImage: function (no) {
                 return (
                     "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" +
@@ -451,9 +488,19 @@
                 }
 
                 app.vueFormData = app.vueFormData.slice().sort((a, b) => {
+                    
+                    let valueA;
+                    let valueB;
+                    
+                    if (key == "point") {
+                        valueA = app.subSkillValue(a)+app.personalityValue(a);
+                        valueB = app.subSkillValue(b)+app.personalityValue(b);
+                        
+                    }else{
+                        valueA = app.parseDateOrNumber(a[key]);
+                        valueB = app.parseDateOrNumber(b[key]);
+                    }
 
-                    const valueA = this.parseDateOrNumber(a[key]);
-                    const valueB = this.parseDateOrNumber(b[key]);
 
                     if (valueA instanceof Date && valueB instanceof Date) {
                         return app.sortDirection === 'asc' ? valueA.getTime() - valueB.getTime() : valueB.getTime() - valueA.getTime();

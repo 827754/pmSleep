@@ -152,7 +152,7 @@
                                     <!-- </v-col> -->
                                     <v-col>
                                         <v-row>
-                                            <v-col cols="12" class="pa-0 ma-0 mb-2">
+                                            <v-col cols="12" class="pa-0 ma-0">
                                                 <!-- <span>タイプ</span> -->
                                                 <v-btn depressed :color="getTypeColor(record.type)" class="white--text">
                                                     {{record.type}}
@@ -185,22 +185,22 @@
                                                 </v-chip>
                                             </v-col>
                                         </v-row>
-                                        <v-row>
-                                            <v-col cols="12" class="pa-0 ma-0">
-                                                <span>せいかく:{{record.personality}}</span>
+                                        <v-row >
+                                            <v-col cols="12" class="pa-0 ma-0 d-flex align-center">
+                                                <span class="ma-2">せいかく:{{record.personality}}</span>
                                                 <!-- <v-chip v-if="record.personality" class="ma-2" color="black" outlined>
                                                 {{record.personality}}
                                             </v-chip> -->
-                                                <span v-if="personality(record.personality)">
+                                                <span v-if="personality(record.personality)" class="pa-0 ma-0 d-flex align-center">
                                                     <span v-if="personality(record.personality).up"
-                                                        class="text-h5 red--text">▲▲</span>
-                                                    <v-chip v-if="personality(record.personality).up" class="ma-2"
+                                                        class="text-h5 red--text ma-1">▲▲</span>
+                                                    <v-chip v-if="personality(record.personality).up" class="ma-1"
                                                         color="red" outlined label>
                                                         {{personality(record.personality).up}}
                                                     </v-chip>
                                                     <span v-if="personality(record.personality).down"
-                                                        class="text-h5 primary--text">▼▼</span>
-                                                    <v-chip v-if="personality(record.personality).down" class="ma-2"
+                                                        class="text-h5 primary--text ma-1">▼▼</span>
+                                                    <v-chip v-if="personality(record.personality).down" class="ma-1"
                                                         color="primary" outlined label>
                                                         {{personality(record.personality).down}}
                                                     </v-chip>
@@ -245,8 +245,8 @@
                                         </v-row>
                                         <v-row v-if="record.daifukuObj!=null">
                                             <v-col cols="12" class="pa-0 ma-0">
-                                                <span>だいふく査定_ランク:{{record.daifukuObj['ランク']}}/{{record.daifukuObj['評価値']}}{{'　'}}
-                                                    :{{record.daifukuObj['ポケモン個体']}}/{{record.daifukuObj['理想個体']}}{{'　'}}
+                                                <span>だいふく査定{{'　'}}ランク:{{record.daifukuObj['ランク']}}{{'　'}}{{record.daifukuObj['評価値']}}{{'　'}}
+                                                    [{{parseNumber(record.daifukuObj['ポケモン個体'])}}/{{parseNumber(record.daifukuObj['理想個体'])}}]
                                                 </span>
                                             </v-col>
                                         </v-row>
@@ -518,6 +518,9 @@
                 } else {
                     app.user = "フー";
                 }
+            },
+            parseNumber(value) {
+                return parseFloat(parseInt(value));
             },
             parseDateOrNumber(value) {
                 const dateRegex = /\d{4}年\d{1,2}月\d{1,2}日/;

@@ -27,7 +27,7 @@
                 <v-container class="fix-width">
 
                     <v-btn depressed v-on:click="changeUser(user);page=1">
-                        ユーザー切り替え
+                        ユーザ切替
                     </v-btn>
                     <v-btn depressed v-on:click="sortArray('index')">
                         登録順<span v-if="sortKey=='index'&&sortDirection=='asc'">▲</span><span
@@ -53,6 +53,16 @@
                         査定<span v-if="sortKey=='point'&&sortDirection=='asc'">▲</span><span
                             v-if="sortKey=='point'&&sortDirection=='desc'">▼</span><span
                             v-if="sortKey!=='point'">{{'　'}}</span>
+                    </v-btn>
+                    <v-btn depressed v-on:click="sortArray('daifukuObjPoint')">
+                        だいふく<br>ランク<span v-if="sortKey=='daifukuObjPoint'&&sortDirection=='asc'">▲</span><span
+                            v-if="sortKey=='daifukuObjPoint'&&sortDirection=='desc'">▼</span><span
+                            v-if="sortKey!=='daifukuObjPoint'">{{'　'}}</span>
+                    </v-btn>
+                    <v-btn depressed v-on:click="sortArray('daifukuObjStrong')">
+                        だいふく<br>強さ<span v-if="sortKey=='daifukuObjStrong'&&sortDirection=='asc'">▲</span><span
+                            v-if="sortKey=='daifukuObjStrong'&&sortDirection=='desc'">▼</span><span
+                            v-if="sortKey!=='daifukuObjStrong'">{{'　'}}</span>
                     </v-btn>
                     <v-btn depressed
                         v-on:click="berryBtn.splice(0);ingredientsBtn.splice(0);typeBtn.splice(0);subSkillBtn.splice(0);">
@@ -233,6 +243,13 @@
                                                     v-if="record.ingredients0">出会った日:{{record.date}}{{'　'}}簡易査定:{{record.point}}</span>
                                             </v-col>
                                         </v-row>
+                                        <v-row v-if="record.daifukuObj!=null">
+                                            <v-col cols="12" class="pa-0 ma-0">
+                                                <span>だいふく査定_ランク:{{record.daifukuObj['ランク']}}/{{record.daifukuObj['評価値']}}{{'　'}}
+                                                    :{{record.daifukuObj['ポケモン個体']}}/{{record.daifukuObj['理想個体']}}{{'　'}}
+                                                </span>
+                                            </v-col>
+                                        </v-row>
                                     </v-col>
                                 </v-row>
                             </v-card>
@@ -353,11 +370,14 @@
                     app.database['ingredients'] = [...output.ingredients];
                 })
                 .catch(err => console.error(err));
+
             await fetch('https://script.googleusercontent.com/macros/echo?user_content_key=8AfeX4RP96mTpE15odk--CFNT_GWlVEUF6_FGLfTRbi9RxDGR3SOTJ7CkYCp4hLN0L_t411YVrfvBomV77IPHgKSV8HI-0WQm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnARyiIdeCDuvmmR-sOwAnpEmTfWwE-RbrYGwoGRLqKklDfEgId7cMEIFEoI0ruGwFCzpkvaQDUotEWmyYUxKV2EEwZKnuwGAA9z9Jw9Md8uu&lib=M3h1_1ty_TS9LsWxMNmQenIa5QikDCKxm')
                 .then(result => result.json())
                 .then((output) => {
                     app.vueFormData = [...output];
+
                     app.vueFormData.forEach((e, i) => {
+                        app.vueFormData[i]['daifukuObj'] = e['daifuku'] != "" ? JSON.parse(e['daifuku']) : null;
                         app.vueFormData[i]['point'] = app.subSkillValue(e) + app.personalityValue(e);
                     }
                     )
@@ -398,19 +418,23 @@
                 return parseInt(subSkillValue * 1.1, 10)
             },
             personalityValue: function (record) {
-                var personalityValue = 10
-                for (const [key, obj] of Object.entries(app.database.personalityData)) {
-                    var tmp = Number(obj[record.type])
-                    if (key == app.database.personality[record.personality].up) {
-                        tmp = tmp * Number(obj.up)
-                        personalityValue = personalityValue + tmp
+                if (record.type != "") {
+                    var personalityValue = 10
+
+                    for (const [key, obj] of Object.entries(app.database.personalityData)) {
+                        var tmp = Number(obj[record.type])
+                        if (key == app.database.personality[record.personality].up) {
+                            tmp = tmp * Number(obj.up)
+                            personalityValue = personalityValue + tmp
+                        }
+                        if (key == app.database.personality[record.personality].down) {
+                            tmp = tmp * Number(obj.down)
+                            personalityValue = personalityValue - tmp
+                        }
                     }
-                    if (key == app.database.personality[record.personality].down) {
-                        tmp = tmp * Number(obj.down)
-                        personalityValue = personalityValue - tmp
-                    }
+                    return parseInt(personalityValue * 0.9, 10)
                 }
-                return parseInt(personalityValue * 0.9, 10)
+
             },
             getImage: function (no) {
                 return (
@@ -513,7 +537,7 @@
                 } else {
                     app.sortKey = key; // 新しいキーをセット
                     app.sortDirection = 'asc'; // 新しいキーに対して昇順でソートする
-                    if (key == "point") {
+                    if (key == "point" | key == "daifukuObjPoint" | key == "daifukuObjStrong") {
                         app.sortDirection = 'desc'
                     }
                 }
@@ -523,14 +547,32 @@
                     let valueA;
                     let valueB;
 
-                    // if (key == "point") {
-                    //     valueA = app.subSkillValue(a) + app.personalityValue(a);
-                    //     valueB = app.subSkillValue(b) + app.personalityValue(b);
+                    if (key == "daifukuObjPoint" | key == "daifukuObjStrong") {
+                        try {
+                            if (key == "daifukuObjPoint") {
+                                valueA = app.parseDateOrNumber(a['daifukuObj']['評価値'])
+                            }
+                            if (key == "daifukuObjStrong") {
+                                valueA = app.parseDateOrNumber(a['daifukuObj']['ポケモン個体'])
+                            }
+                        } catch (error) {
+                            valueA = 0
+                        }
+                        try {
+                            if (key == "daifukuObjPoint") {
+                                valueB = app.parseDateOrNumber(b['daifukuObj']['評価値'])
+                            }
+                            if (key == "daifukuObjStrong") {
+                                valueB = app.parseDateOrNumber(b['daifukuObj']['ポケモン個体'])
+                            }
+                        } catch (error) {
+                            valueB = 0
+                        }
 
-                    // } else {
-                    valueA = app.parseDateOrNumber(a[key]);
-                    valueB = app.parseDateOrNumber(b[key]);
-                    // }
+                    } else {
+                        valueA = app.parseDateOrNumber(a[key]);
+                        valueB = app.parseDateOrNumber(b[key]);
+                    }
 
 
                     if (valueA instanceof Date && valueB instanceof Date) {

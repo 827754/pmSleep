@@ -145,7 +145,7 @@
                                             </v-avatar>
                                             
                                             <v-img v-if="record.color=='色違い'" :src="getImage(record.no)" max-width="180" :style="[{ backgroundImage: 'url(https://827754.github.io/pmSleep/assets/color.png)'},{backgroundSize:'cover'}]"></v-img>
-                                            <v-img v-else :src="getImage(record.no)" max-width="180" ></v-img>
+                                            <v-img v-else :src="getImage(record.no)" max-width="180" :style="[{ backgroundImage: 'url(https://827754.github.io/pmSleep/assets/normal.png)'},{backgroundSize:'cover'}]"></v-img>
                                         </v-layout>
                                         <v-sheet class="text-h6 text-center">
                                             No.{{record.no}} : {{record.pokemon}}

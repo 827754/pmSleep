@@ -138,12 +138,14 @@
                             <!-- <v-card class="pa-5 ma-5 ml-0" v-if="record.foo==user&&multiButtonCheck(record)" -->
                             <v-card class="pa-5 ma-5 ml-0" class="fix-width">
                                 <v-row>
-                                    <v-col cols="3">
+                                    <v-col cols="3" >
                                         <v-layout justify-center>
                                             <v-avatar color="red" size="35" class="absolute top-0 left-0">
                                                 <span class="white--text text-body">{{record.foo}}</span>
                                             </v-avatar>
-                                            <v-img :src="getImage(record.no)" max-width="180"></v-img>
+                                            
+                                            <v-img v-if="record.color=='色違い'" :src="getImage(record.no)" max-width="180" :style="[{ backgroundImage: 'url(https://827754.github.io/pmSleep/assets/color.png)'},{backgroundSize:'cover'}]"></v-img>
+                                            <v-img v-else :src="getImage(record.no)" max-width="180" ></v-img>
                                         </v-layout>
                                         <v-sheet class="text-h6 text-center">
                                             No.{{record.no}} : {{record.pokemon}}
@@ -164,6 +166,11 @@
                                                 <span>きのみ</span>
                                                 <v-btn depressed>
                                                     <v-img :src="getImageDB(record.berry)" max-width="25"></v-img>
+                                                    {{record.berry}}
+                                                    </v-img>
+                                                </v-btn>
+                                                <v-btn depressed v-if="record.color=='色違い'">
+                                                    <v-img :src="https://827754.github.io/pmSleep/assets/coloricon.png" max-width="25"></v-img>
                                                     {{record.berry}}
                                                     </v-img>
                                                 </v-btn>

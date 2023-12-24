@@ -30,22 +30,22 @@
                         ユーザ切替
                     </v-btn>
                     <v-btn depressed v-on:click="sortArray('index')">
-                        登録順<span v-if="sortKey=='index'&&sortDirection=='asc'">▲</span><span
+                        登録<span v-if="sortKey=='index'&&sortDirection=='asc'">▲</span><span
                             v-if="sortKey=='index'&&sortDirection=='desc'">▼</span><span
                             v-if="sortKey!=='index'">{{'　'}}</span>
                     </v-btn>
                     <v-btn depressed v-on:click="sortArray('pokemon')">
-                        名前順<span v-if="sortKey=='pokemon'&&sortDirection=='asc'">▲</span><span
+                        名前<span v-if="sortKey=='pokemon'&&sortDirection=='asc'">▲</span><span
                             v-if="sortKey=='pokemon'&&sortDirection=='desc'">▼</span><span
                             v-if="sortKey!=='pokemon'">{{'　'}}</span>
                     </v-btn>
                     <v-btn depressed v-on:click="sortArray('no')">
-                        図鑑順<span v-if="sortKey=='no'&&sortDirection=='asc'">▲</span><span
+                        図鑑<span v-if="sortKey=='no'&&sortDirection=='asc'">▲</span><span
                             v-if="sortKey=='no'&&sortDirection=='desc'">▼</span><span
                             v-if="sortKey!=='no'">{{'　'}}</span>
                     </v-btn>
                     <v-btn depressed v-on:click="sortArray('date')">
-                        日付順<span v-if="sortKey=='date'&&sortDirection=='asc'">▲</span><span
+                        日付<span v-if="sortKey=='date'&&sortDirection=='asc'">▲</span><span
                             v-if="sortKey=='date'&&sortDirection=='desc'">▼</span><span
                             v-if="sortKey!=='date'">{{'　'}}</span>
                     </v-btn>
@@ -55,12 +55,12 @@
                             v-if="sortKey!=='point'">{{'　'}}</span>
                     </v-btn>
                     <v-btn depressed v-on:click="sortArray('daifukuObjPoint')">
-                        だいふく<br>ランク<span v-if="sortKey=='daifukuObjPoint'&&sortDirection=='asc'">▲</span><span
+                        ランク<span v-if="sortKey=='daifukuObjPoint'&&sortDirection=='asc'">▲</span><span
                             v-if="sortKey=='daifukuObjPoint'&&sortDirection=='desc'">▼</span><span
                             v-if="sortKey!=='daifukuObjPoint'">{{'　'}}</span>
                     </v-btn>
                     <v-btn depressed v-on:click="sortArray('daifukuObjStrong')">
-                        だいふく<br>強さ<span v-if="sortKey=='daifukuObjStrong'&&sortDirection=='asc'">▲</span><span
+                        強さ<span v-if="sortKey=='daifukuObjStrong'&&sortDirection=='asc'">▲</span><span
                             v-if="sortKey=='daifukuObjStrong'&&sortDirection=='desc'">▼</span><span
                             v-if="sortKey!=='daifukuObjStrong'">{{'　'}}</span>
                     </v-btn>

@@ -27,22 +27,28 @@ spreadsheet = client.open("ポケスリ回答")  # 'YourSpreadsheetName' を開�
 # シートを取得
 sheet = spreadsheet.worksheet("フォームの回答 1")
 
-last_row = len(sheet.col_values(1))
+daifukuCol = sheet.col_values(16)
+last_row = len(daifukuCol)
 
 url = "https://www.pokemonsleepdaifuku.com/checker/"  # アクセス先のurlを指定
 
 driver = webdriver.Chrome()  # driverの読み込み
 driver.get(url)  # サイトにアクセス
 
+for rows in range(len(daifukuCol)):
+    # print(rows)
+    # print(daifukuCol[rows])
+    # for num in range(last_row):
 
-for num in range(last_row):
+    #     print(num + 2)
 
-    print(num + 2)
+    #     rows = num + 210
 
-    rows = num + 210
+    if daifukuCol[rows] != "":
+        continue
 
     # セルの値を取得
-    rowData = sheet.row_values(rows)
+    rowData = sheet.row_values(rows + 1)
 
     PokemoName = rowData[3] + rowData[4] + rowData[5]
     Sub10 = rowData[6]
@@ -92,7 +98,7 @@ for num in range(last_row):
         sleep(1)
         Sub50Select = Select(Sub50Dropdown)
         Sub50Select.select_by_visible_text(Sub50)
-        
+
         PersonalityDropdown = driver.find_element(By.NAME, "pokemon_personality")
         # search_area.send_keys("dailyhackon python")
         sleep(1)
@@ -120,7 +126,7 @@ for num in range(last_row):
         line += "}"
         print(line.replace("\n", "").replace("\r", ""))
         # daifuku = sheet.row_values(2)[16]
-        sheet.update_cell(rows, 16, line.replace("\n", "").replace("\r", ""))
+        sheet.update_cell(rows + 1, 16, line.replace("\n", "").replace("\r", ""))
 
         checkBtn = driver.find_element(By.CLASS_NAME, "resetButton")
         sleep(10)

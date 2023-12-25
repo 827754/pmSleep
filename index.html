@@ -138,9 +138,17 @@
 
                         </v-card>
                     </template>
-                    <div class="text-center">
+                    <v-card v-if="vueFormData.length !== 0"
+                        class="ma-5 fix-width text-center d-flex justify-space-between align-center" flat>
+
+                        <span></span>
                         <v-pagination v-model="page" :length="pageLength"></v-pagination>
-                    </div>
+                        <v-btn class="">
+                            {{displayCnt}}/{{userCnt}}
+                        </v-btn>
+
+                    </v-card>
+
                     <template v-if="vueFormData.length !== 0">
                         <template v-for="(record,index) in displayDataSet()" class="fix-width">
                             <!-- <v-card class="pa-5 ma-5 ml-0" v-if="record.foo==user&&multiButtonCheck(record)" -->
@@ -274,12 +282,18 @@
                             </v-card>
                         </template>
                     </template>
-                    <div class="text-center mb-5">
-                        <v-pagination v-model="page" :length="pageLength" @input="pageUP"></v-pagination>
-                    </div>
-                    <div class="my-5">
+                    <v-card v-if="vueFormData.length !== 0"
+                        class="ma-5 fix-width text-center d-flex justify-space-between align-center" flat>
 
-                    </div>
+                        <span></span>
+                        <v-pagination v-model="page" :length="pageLength" @input="pageUP"></v-pagination>
+                        <v-btn class="">
+                            {{displayCnt}}/{{userCnt}}
+                        </v-btn>
+
+
+                    </v-card>
+
                 </v-container>
             </v-content>
         </v-app>
@@ -379,6 +393,8 @@
             page: 1,
             pageLength: 0,
             pageSize: 20,
+            userCnt: 0,
+            displayCnt: 0
         },
         mounted: async function () {
 
@@ -414,8 +430,15 @@
                 return app.database.personality[key];
             },
             displayDataSet: function () {
-                var tmp = app.vueFormData.filter(e => e.foo == app.user && app.multiButtonCheck(e))
+                var userTmp = app.vueFormData.filter(e => e.foo == app.user)
+                app.userCnt = userTmp.length
+                var tmp = userTmp.filter(e => app.multiButtonCheck(e))
+                if (app.displayCnt != tmp.length) {
+                    app.page = 1
+                }
+                app.displayCnt = tmp.length
                 app.pageLength = Math.ceil(tmp.length / app.pageSize);
+
                 return tmp.slice(app.pageSize * (app.page - 1), app.pageSize * (app.page));
             },
             pageUP: function () {
@@ -473,7 +496,7 @@
                 allValid.fill(true)
 
                 if (app.colorBtn == 'true') {
-                    if(record.color!='色違い'){
+                    if (record.color != '色違い') {
                         return false
                     }
                 }

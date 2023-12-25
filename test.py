@@ -30,14 +30,15 @@ sheet = spreadsheet.worksheet("フォームの回答 1")
 daifukuCell = 18
 
 daifukuCol = sheet.col_values(daifukuCell)
-last_row = len(daifukuCol)
+dataraw = sheet.col_values(1)
+last_row = len(dataraw)
 
 url = "https://www.pokemonsleepdaifuku.com/checker/"  # アクセス先のurlを指定
 
 driver = webdriver.Chrome()  # driverの読み込み
 driver.get(url)  # サイトにアクセス
 
-for rows in range(len(daifukuCol)):
+for rows in range(len(dataraw)):
     # print(rows)
     # print(daifukuCol[rows])
     # for num in range(last_row):
@@ -45,9 +46,9 @@ for rows in range(len(daifukuCol)):
     #     print(num + 2)
 
     #     rows = num + 210
-
-    if daifukuCol[rows] != "":
-        continue
+    if rows < len(daifukuCol):
+        if daifukuCol[rows] != "":
+            continue
 
     # セルの値を取得
     rowData = sheet.row_values(rows + 1)
@@ -73,7 +74,7 @@ for rows in range(len(daifukuCol)):
     if NameFlag != "やご":
         sleep(2)
         iDbtn = driver.find_element(
-            By.XPATH, "/html/body/main/div/form/div[1]/div[2]/div[2]/label[4]"
+            By.XPATH, "/html/body/main/div/article/form/div[1]/div[2]/div[2]/label[4]"
         )
         iDbtn.click()
 
@@ -112,7 +113,7 @@ for rows in range(len(daifukuCol)):
 
         checkBtn = driver.find_element(By.CLASS_NAME, "submitButton")
         checkBtn.click()
-        sleep(2)
+        sleep(3)
 
         table = driver.find_element(By.CLASS_NAME, "resultTable")
         trs = table.find_elements(By.TAG_NAME, "tr")

@@ -81,13 +81,21 @@
                                         </div>
                                     </v-expansion-panel-header>
                                     <v-expansion-panel-content>
-                                        <div class="mb-2">
+                                        <div class="mb-2 d-flex align-center">
                                             <v-btn-toggle v-model="typeBtn" multiple dense tile borderless>
                                                 <template v-for="(value,key) in database.type">
                                                     <v-btn class="px-5 mr-1" :value="key">
                                                         {{key}}
                                                     </v-btn>
                                                 </template>
+                                            </v-btn-toggle>
+                                            <v-btn-toggle v-model="colorBtn" multiple dense tile borderless>
+                                                <v-btn class="px-5 mr-1" value="true">
+                                                    <v-img
+                                                        :src="'https://827754.github.io/pmSleep/assets/coloricon.png'"
+                                                        max-width="25"></v-img>
+                                                    </v-img>
+                                                </v-btn>
                                             </v-btn-toggle>
                                         </div>
                                         <div class="mb-2">
@@ -138,14 +146,16 @@
                             <!-- <v-card class="pa-5 ma-5 ml-0" v-if="record.foo==user&&multiButtonCheck(record)" -->
                             <v-card class="pa-5 ma-5 ml-0" class="fix-width">
                                 <v-row>
-                                    <v-col cols="3" >
+                                    <v-col cols="3">
                                         <v-layout justify-center>
                                             <v-avatar color="red" size="35" class="absolute top-0 left-0">
                                                 <span class="white--text text-body">{{record.foo}}</span>
                                             </v-avatar>
-                                            
-                                            <v-img v-if="record.color=='色違い'" :src="getImage(record.no)" max-width="180" :style="[{ backgroundImage: 'url(https://827754.github.io/pmSleep/assets/color.png)'},{backgroundSize:'cover'}]"></v-img>
-                                            <v-img v-else :src="getImage(record.no)" max-width="180" :style="[{ backgroundImage: 'url(https://827754.github.io/pmSleep/assets/normal.png)'},{backgroundSize:'cover'}]"></v-img>
+
+                                            <v-img v-if="record.color=='色違い'" :src="getImage(record.no)" max-width="180"
+                                                :style="[{ backgroundImage: 'url(https://827754.github.io/pmSleep/assets/color.png)'},{backgroundSize:'cover'}]"></v-img>
+                                            <v-img v-else :src="getImage(record.no)" max-width="180"
+                                                :style="[{ backgroundImage: 'url(https://827754.github.io/pmSleep/assets/normal.png)'},{backgroundSize:'cover'}]"></v-img>
                                         </v-layout>
                                         <v-sheet class="text-h6 text-center">
                                             No.{{record.no}} : {{record.pokemon}}
@@ -169,8 +179,10 @@
                                                     {{record.berry}}
                                                     </v-img>
                                                 </v-btn>
-                                                <v-btn depressed v-if="record.color=='色違い'">
-                                                    <v-img :src="'https://827754.github.io/pmSleep/assets/coloricon.png'" max-width="25"></v-img>
+                                                <v-btn depressed v-if="record.color=='色違い'" class="pa-0 ma-0">
+                                                    <v-img
+                                                        :src="'https://827754.github.io/pmSleep/assets/coloricon.png'"
+                                                        max-width="25"></v-img>
                                                     </v-img>
                                                 </v-btn>
                                             </v-col>
@@ -191,13 +203,14 @@
                                                 </v-chip>
                                             </v-col>
                                         </v-row>
-                                        <v-row >
+                                        <v-row>
                                             <v-col cols="12" class="pa-0 ma-0 d-flex align-center">
                                                 <span class="ma-2">せいかく:{{record.personality}}</span>
                                                 <!-- <v-chip v-if="record.personality" class="ma-2" color="black" outlined>
                                                 {{record.personality}}
                                             </v-chip> -->
-                                                <span v-if="personality(record.personality)" class="pa-0 ma-0 d-flex align-center">
+                                                <span v-if="personality(record.personality)"
+                                                    class="pa-0 ma-0 d-flex align-center">
                                                     <span v-if="personality(record.personality).up"
                                                         class="text-h5 red--text ma-1">▲▲</span>
                                                     <v-chip v-if="personality(record.personality).up" class="ma-1"
@@ -362,6 +375,7 @@
             typeBtn: [],
             berryBtn: [],
             ingredientsBtn: [],
+            colorBtn: '',
             page: 1,
             pageLength: 0,
             pageSize: 20,
@@ -457,6 +471,12 @@
 
                 var allValid = new Array(allBtn.length)
                 allValid.fill(true)
+
+                if (app.colorBtn == 'true') {
+                    if(record.color!='色違い'){
+                        return false
+                    }
+                }
 
                 allBtn.forEach((e, i) => {
                     if (e.length !== 0) {

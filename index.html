@@ -138,21 +138,22 @@
 
                         </v-card>
                     </template>
-                    <v-card v-if="vueFormData.length !== 0"
-                        class="ma-5 fix-width text-center d-flex justify-space-between align-center" flat>
-
-                        <span></span>
-                        <v-pagination v-model="page" :length="pageLength"></v-pagination>
-                        <v-btn class="">
-                            {{displayCnt}}/{{userCnt}}
-                        </v-btn>
-
-                    </v-card>
-
+                    <template class="fix-width">
+                        <v-card v-if="vueFormData.length !== 0"
+                            class="px-0 ma-5 ml-0 text-center d-flex justify-space-between align-center" flat>
+    
+                            <span class="px-5 mx-5"> </span>
+                            <v-pagination v-model="page" :length="pageLength"></v-pagination>
+                            <v-btn class="">
+                                {{displayCnt}}/{{userCnt}}
+                            </v-btn>
+    
+                        </v-card>
+                    </template>
                     <template v-if="vueFormData.length !== 0">
                         <template v-for="(record,index) in displayDataSet()" class="fix-width">
                             <!-- <v-card class="pa-5 ma-5 ml-0" v-if="record.foo==user&&multiButtonCheck(record)" -->
-                            <v-card class="pa-5 ma-5 ml-0" class="fix-width">
+                            <v-card class="pa-5 ma-5 ml-0" >
                                 <v-row>
                                     <v-col cols="3">
                                         <v-layout justify-center>
@@ -282,17 +283,19 @@
                             </v-card>
                         </template>
                     </template>
-                    <v-card v-if="vueFormData.length !== 0"
-                        class="ma-5 fix-width text-center d-flex justify-space-between align-center" flat>
 
-                        <span></span>
-                        <v-pagination v-model="page" :length="pageLength" @input="pageUP"></v-pagination>
-                        <v-btn class="">
-                            {{displayCnt}}/{{userCnt}}
-                        </v-btn>
+                    <template class="fix-width">
+                        <v-card v-if="vueFormData.length !== 0"
+                            class="px-0 ma-5 ml-0 text-center d-flex justify-space-between align-center" flat>
+    
+                            <span class="px-5 mx-5"> </span>
+                            <v-pagination v-model="page" :length="pageLength" @input="pageUP"></v-pagination>
+                            <v-btn class="">
+                                {{displayCnt}}/{{userCnt}}
+                            </v-btn>
 
-
-                    </v-card>
+                        </v-card>
+                    </template>
 
                 </v-container>
             </v-content>

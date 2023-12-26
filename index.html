@@ -322,7 +322,7 @@
                                 </v-row>
                                 <v-row v-if="record.evolution.length != 0">
                                     <template v-for="item in record.evolution">
-                                        <v-tooltip top :attach="'.id'+item.id">
+                                        <v-tooltip top open-on-focus="false" :attach="'.id'+item.id">
                                             <template v-slot:activator="{ on, attrs }">
                                                 <span v-bind="attrs" v-on="on" :class="'id'+item.id">
                                                     <v-img :src="getImage(item.id)" max-width="85"></v-img>

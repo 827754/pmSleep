@@ -150,7 +150,7 @@
                         </v-card>
                     </template>
 
-                    <template class="fix-width">
+                    <template v-if="cookingBtn != null" class="fix-width">
                         <v-card class="px-0 ma-5 ml-0 text-center d-flex justify-space-between align-center" flat>
 
                             <v-img v-if="cookingBtn == 'curryandstew'"
@@ -164,7 +164,6 @@
                                 :src="'https://827754.github.io/pmSleep/assets/dessertanddrink.jpg'"
                                 max-width="900"></v-img>
                             </v-img>
-
 
                         </v-card>
                     </template>
@@ -423,7 +422,7 @@
             typeBtn: [],
             berryBtn: [],
             ingredientsBtn: [],
-            cookingBtn: '',
+            cookingBtn: null,
             colorBtn: '',
             page: 1,
             pageLength: 0,

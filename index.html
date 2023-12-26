@@ -307,6 +307,10 @@
                                                 <v-img :src="getImage(item)" max-width="75"></v-img>
                                             </template>
                                         </v-row>
+                                        <v-row class="pa-5 ma-5" v-if="record.evolutionLoad==true">
+                                            <v-progress-circular :size="37.5" color="primary"
+                                                indeterminate></v-progress-circular>
+                                        </v-row>
                                         <v-row v-if="record.daifukuObj!=null">
                                             <v-col cols="12" class="pa-0 ma-0">
                                                 <span>だいふく査定{{'　'}}ランク:{{record.daifukuObj['ランク']}}{{'　'}}{{record.daifukuObj['評価値']}}{{'　'}}
@@ -439,7 +443,7 @@
             pageLength: 0,
             pageSize: 20,
             userCnt: 0,
-            displayCnt: 0
+            displayCnt: 0,
         },
         mounted: async function () {
 
@@ -461,6 +465,7 @@
                         app.vueFormData[i]['daifukuObj'] = e['daifuku'] != "" ? JSON.parse(e['daifuku']) : null;
                         app.vueFormData[i]['point'] = app.subSkillValue(e) + app.personalityValue(e);
                         app.vueFormData[i]['evolution'] = [];
+                        app.vueFormData[i]['evolutionLoad'] = false;
                     }
                     )
 
@@ -504,6 +509,11 @@
                 return speciesList
             },
             getPokemonEvolutionChain: async function (pokemonId, recordIndex) {
+                var index = app.vueFormData.findIndex(({ index }) => index === recordIndex);
+                app.$set(app.vueFormData[index], 'evolutionLoad', true)
+                app.vueFormData.push(null)
+                app.vueFormData.pop()
+
                 const speciesURL = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`;
                 var speciesList = []
                 await fetch(speciesURL)
@@ -550,7 +560,7 @@
                         })
                         .then(data => {
                             const tmp = data['varieties'];
-                            
+
                             varietiesConcat = tmp.map(variety => {
                                 const urlParts = variety.pokemon.url.split('/');
                                 return parseInt(urlParts[urlParts.length - 2]);
@@ -567,13 +577,13 @@
 
                 // console.log(idsArray); // 抽出された species データのリストを出力
                 console.log(recordIndex)
-                // console.log(varieties)
-                var index = app.vueFormData.findIndex(({index}) => index === recordIndex);
+
                 console.log(index)
                 app.vueFormData[index]['evolution'].splice(0)
                 app.$set(app.vueFormData[index], 'evolution', [...varieties])
                 app.vueFormData.push(null)
                 app.vueFormData.pop()
+                app.$set(app.vueFormData[index], 'evolutionLoad', false)
             },
             personality: function (key) {
                 if (app.database.personality[key].up === "") {

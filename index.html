@@ -322,11 +322,11 @@
                                 </v-row>
                                 <v-row v-if="record.evolution.length != 0">
                                     <template v-for="item in record.evolution">
-                                        <v-tooltip top>
+                                        <v-tooltip top :attach="'.id'+item.id">
                                             <template v-slot:activator="{ on, attrs }">
-                                                <sapn v-bind="attrs" v-on="on">
+                                                <span v-bind="attrs" v-on="on" :class="'id'+item.id">
                                                     <v-img :src="getImage(item.id)" max-width="85"></v-img>
-                                                </sapn>
+                                                </span>
                                             </template>
                                             <span>{{item.name}}</span>
                                         </v-tooltip>

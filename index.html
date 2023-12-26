@@ -191,7 +191,8 @@
                                                 <span class="white--text text-body">{{record.foo}}</span>
                                             </v-avatar>
 
-                                            <v-img v-if="record.color=='色違い'" :src="getImage(record.no)" max-width="180"
+                                            <v-img v-if="record.color=='色違い'" :src="getImage('shiny/'+record.no)"
+                                                max-width="180"
                                                 :style="[{ backgroundImage: 'url(https://827754.github.io/pmSleep/assets/color.png)'},{backgroundSize:'cover'}]"></v-img>
                                             <v-img v-else :src="getImage(record.no)" max-width="180"
                                                 :style="[{ backgroundImage: 'url(https://827754.github.io/pmSleep/assets/normal.png)'},{backgroundSize:'cover'}]"></v-img>
@@ -306,13 +307,13 @@
                                                 <v-img :src="getImage(item)" max-width="75"></v-img>
                                             </template>
                                         </v-row>
-                                        <v-row v-if="record.daifukuObj!=null" >
+                                        <v-row v-if="record.daifukuObj!=null">
                                             <v-col cols="12" class="pa-0 ma-0">
                                                 <span>だいふく査定{{'　'}}ランク:{{record.daifukuObj['ランク']}}{{'　'}}{{record.daifukuObj['評価値']}}{{'　'}}
                                                     [{{parseNumber(record.daifukuObj['ポケモン個体'])}}/{{parseNumber(record.daifukuObj['理想個体'])}}]
                                                 </span>
                                                 <v-btn depressed
-                                                    v-on:click="getPokemonEvolutionChain(record.no,record.index,record)">
+                                                    v-on:click="getPokemonEvolutionChain(record.no,record.index)">
                                                     進化ポケモン表示
                                                 </v-btn>
                                             </v-col>
@@ -502,9 +503,9 @@
 
                 return speciesList
             },
-            getPokemonEvolutionChain: async function (pokemonId, recordIndex, index) {
+            getPokemonEvolutionChain: async function (pokemonId, recordIndex) {
                 const speciesURL = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`;
-
+                var speciesList = []
                 await fetch(speciesURL)
                     .then(response => {
                         if (!response.ok) {
@@ -523,25 +524,56 @@
                         return evolutionResponse.json();
                     })
                     .then(evolutionData => {
-                        var speciesList = app.extractSpecies(evolutionData['chain']);
-                        console.log(speciesList); // 抽出された species データのリストを出力
-                        const idsArray = speciesList.map(item => {
-                            const id = item.url.split('/').filter(str => str !== '').pop();
-                            return parseInt(id);
-                        });
-                        console.log(idsArray); // 抽出された species データのリストを出力
-
-                        app.vueFormData[recordIndex - 1]['evolution'].splice(0)
-                        app.$set(app.vueFormData[recordIndex - 1], 'evolution', [...idsArray])
-                        app.vueFormData.push(null)
-                        app.vueFormData.pop()
-                        // this.record['evolution'].push(...idsArray)
-                        // app.displayData[recordIndex]['evolution'].push(...idsArray)
-
+                        speciesList = app.extractSpecies(evolutionData['chain']);
                     })
                     .catch(error => {
                         console.error(error.message);
                     });
+
+                console.log(speciesList); // 抽出された species データのリストを出力
+                const idsArray = speciesList.map(item => {
+                    const id = item.url.split('/').filter(str => str !== '').pop();
+                    return parseInt(id);
+                });
+
+                var varieties = []
+
+                for (const e of idsArray) {
+
+                    const varietiesURL = `https://pokeapi.co/api/v2/pokemon-species/${e}/`;
+                    await fetch(varietiesURL)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('データの取得に失敗しました');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            const tmp = data['varieties'];
+                            
+                            varietiesConcat = tmp.map(variety => {
+                                const urlParts = variety.pokemon.url.split('/');
+                                return parseInt(urlParts[urlParts.length - 2]);
+                            });
+                            // console.log(varietiesConcat)
+                            varieties.push(...varietiesConcat)
+                        })
+                        .catch(error => {
+                            console.error(error.message);
+                        });
+
+                }
+
+
+                // console.log(idsArray); // 抽出された species データのリストを出力
+                console.log(recordIndex)
+                // console.log(varieties)
+                var index = app.vueFormData.findIndex(({index}) => index === recordIndex);
+                console.log(index)
+                app.vueFormData[index]['evolution'].splice(0)
+                app.$set(app.vueFormData[index], 'evolution', [...varieties])
+                app.vueFormData.push(null)
+                app.vueFormData.pop()
             },
             personality: function (key) {
                 if (app.database.personality[key].up === "") {

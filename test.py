@@ -15,7 +15,7 @@ scope = [
     "https://www.googleapis.com/auth/drive",
 ]
 creds = Credentials.from_service_account_file(
-    "future-snowfall-408404-6a89c0080a5e.json", scopes=scope
+    "future-snowfall-408404-14c3825a59f9.json", scopes=scope
 )
 
 # 認証情報を使ってクライアントを作成

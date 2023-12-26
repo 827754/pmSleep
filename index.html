@@ -97,6 +97,17 @@
                                                     </v-img>
                                                 </v-btn>
                                             </v-btn-toggle>
+                                            <v-btn-toggle v-model="cookingBtn" dense tile borderless>
+                                                <v-btn class="px-5 mr-1" value="curryandstew">
+                                                    カレー・シチュー
+                                                </v-btn>
+                                                <v-btn class="px-5 mr-1" value="salad">
+                                                    サラダ
+                                                </v-btn>
+                                                <v-btn class="px-5 mr-1" value="dessertanddrink">
+                                                    デザート・ドリンク
+                                                </v-btn>
+                                            </v-btn-toggle>
                                         </div>
                                         <div class="mb-2">
                                             <v-btn-toggle v-model="berryBtn" multiple>
@@ -138,22 +149,41 @@
 
                         </v-card>
                     </template>
+
+                    <template class="fix-width">
+                        <v-card 
+                            class="px-0 ma-5 ml-0 text-center d-flex justify-space-between align-center" flat>
+
+                            <v-img v-if="cokkingBtn == 'curryandstew'" :src="'https://827754.github.io/pmSleep/assets/curryandstew.png'"
+                                max-width="25"></v-img>
+                            </v-img>
+                            <v-img v-if="cokkingBtn == 'salad'" :src="'https://827754.github.io/pmSleep/assets/salad.png'"
+                                max-width="25"></v-img>
+                            </v-img>
+                            <v-img v-if="cokkingBtn == 'dessertanddrink'" :src="'https://827754.github.io/pmSleep/assets/dessertanddrink.png'"
+                                max-width="25"></v-img>
+                            </v-img>
+
+
+                        </v-card>
+                    </template>
+
                     <template class="fix-width">
                         <v-card v-if="vueFormData.length !== 0"
                             class="px-0 ma-5 ml-0 text-center d-flex justify-space-between align-center" flat>
-    
+
                             <span class="px-5 mx-5"> </span>
                             <v-pagination v-model="page" :length="pageLength"></v-pagination>
                             <v-btn class="">
                                 {{displayCnt}}/{{userCnt}}
                             </v-btn>
-    
+
                         </v-card>
                     </template>
                     <template v-if="vueFormData.length !== 0">
                         <template v-for="(record,index) in displayDataSet()" class="fix-width">
                             <!-- <v-card class="pa-5 ma-5 ml-0" v-if="record.foo==user&&multiButtonCheck(record)" -->
-                            <v-card class="pa-5 ma-5 ml-0" >
+                            <v-card class="pa-5 ma-5 ml-0">
                                 <v-row>
                                     <v-col cols="3">
                                         <v-layout justify-center>
@@ -287,7 +317,7 @@
                     <template class="fix-width">
                         <v-card v-if="vueFormData.length !== 0"
                             class="px-0 ma-5 ml-0 text-center d-flex justify-space-between align-center" flat>
-    
+
                             <span class="px-5 mx-5"> </span>
                             <v-pagination v-model="page" :length="pageLength" @input="pageUP"></v-pagination>
                             <v-btn class="">
@@ -392,6 +422,7 @@
             typeBtn: [],
             berryBtn: [],
             ingredientsBtn: [],
+            cookingBtn: [],
             colorBtn: '',
             page: 1,
             pageLength: 0,

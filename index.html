@@ -68,11 +68,22 @@
                         v-on:click="berryBtn.splice(0);ingredientsBtn.splice(0);typeBtn.splice(0);subSkillBtn.splice(0);">
                         絞り込み解除
                     </v-btn>
-
-
+                    <div class="fix-width mt-2">
+                        <v-btn-toggle v-model="cookingBtn" dense tile borderless>
+                            <v-btn class="px-5 mr-1" value="curryandstew">
+                                カレー・シチュー
+                            </v-btn>
+                            <v-btn class="px-5 mr-1" value="salad">
+                                サラダ
+                            </v-btn>
+                            <v-btn class="px-5 mr-1" value="dessertanddrink">
+                                デザート・ドリンク
+                            </v-btn>
+                        </v-btn-toggle>
+                    </div>
 
                     <template v-if="database !== null" class="fix-width">
-                        <v-card class="pa-0 ma-5 ml-0" class="fix-width" flat>
+                        <v-card class="pa-0 ma-5 ml-0 mt-2" class="fix-width" flat>
                             <v-expansion-panels>
                                 <v-expansion-panel>
                                     <v-expansion-panel-header class="">
@@ -95,17 +106,6 @@
                                                         :src="'https://827754.github.io/pmSleep/assets/coloricon.png'"
                                                         max-width="25"></v-img>
                                                     </v-img>
-                                                </v-btn>
-                                            </v-btn-toggle>
-                                            <v-btn-toggle v-model="cookingBtn" dense tile borderless>
-                                                <v-btn class="px-5 mr-1" value="curryandstew">
-                                                    カレー・シチュー
-                                                </v-btn>
-                                                <v-btn class="px-5 mr-1" value="salad">
-                                                    サラダ
-                                                </v-btn>
-                                                <v-btn class="px-5 mr-1" value="dessertanddrink">
-                                                    デザート・ドリンク
                                                 </v-btn>
                                             </v-btn-toggle>
                                         </div>
@@ -151,17 +151,18 @@
                     </template>
 
                     <template class="fix-width">
-                        <v-card 
-                            class="px-0 ma-5 ml-0 text-center d-flex justify-space-between align-center" flat>
+                        <v-card class="px-0 ma-5 ml-0 text-center d-flex justify-space-between align-center" flat>
 
-                            <v-img v-if="cokkingBtn == 'curryandstew'" :src="'https://827754.github.io/pmSleep/assets/curryandstew.png'"
-                                max-width="25"></v-img>
+                            <v-img v-if="cookingBtn == 'curryandstew'"
+                                :src="'https://827754.github.io/pmSleep/assets/curryandstew.png'"
+                                max-width="900"></v-img>
                             </v-img>
-                            <v-img v-if="cokkingBtn == 'salad'" :src="'https://827754.github.io/pmSleep/assets/salad.png'"
-                                max-width="25"></v-img>
+                            <v-img v-if="cookingBtn == 'salad'"
+                                :src="'https://827754.github.io/pmSleep/assets/salad.png'" max-width="900"></v-img>
                             </v-img>
-                            <v-img v-if="cokkingBtn == 'dessertanddrink'" :src="'https://827754.github.io/pmSleep/assets/dessertanddrink.png'"
-                                max-width="25"></v-img>
+                            <v-img v-if="cookingBtn == 'dessertanddrink'"
+                                :src="'https://827754.github.io/pmSleep/assets/dessertanddrink.png'"
+                                max-width="900"></v-img>
                             </v-img>
 
 
@@ -422,7 +423,7 @@
             typeBtn: [],
             berryBtn: [],
             ingredientsBtn: [],
-            cookingBtn: [],
+            cookingBtn: '',
             colorBtn: '',
             page: 1,
             pageLength: 0,

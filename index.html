@@ -181,7 +181,7 @@
                         </v-card>
                     </template>
                     <template v-if="vueFormData.length !== 0">
-                        <template v-for="(record,index) in displayDataSet()" class="fix-width">
+                        <template v-for="(record,index) in displayDataSet" class="fix-width">
                             <!-- <v-card class="pa-5 ma-5 ml-0" v-if="record.foo==user&&multiButtonCheck(record)" -->
                             <v-card class="pa-5 ma-5 ml-0">
                                 <v-row>
@@ -301,12 +301,22 @@
                                                     v-if="record.ingredients0">出会った日:{{record.date}}{{'　'}}簡易査定:{{record.point}}</span>
                                             </v-col>
                                         </v-row>
-                                        <v-row v-if="record.daifukuObj!=null">
+                                        <v-row v-if="record.evolution.length != 0">
+                                            <template v-for="item in record.evolution">
+                                                <v-img :src="getImage(item)" max-width="75"></v-img>
+                                            </template>
+                                        </v-row>
+                                        <v-row v-if="record.daifukuObj!=null" >
                                             <v-col cols="12" class="pa-0 ma-0">
                                                 <span>だいふく査定{{'　'}}ランク:{{record.daifukuObj['ランク']}}{{'　'}}{{record.daifukuObj['評価値']}}{{'　'}}
                                                     [{{parseNumber(record.daifukuObj['ポケモン個体'])}}/{{parseNumber(record.daifukuObj['理想個体'])}}]
                                                 </span>
+                                                <v-btn depressed
+                                                    v-on:click="getPokemonEvolutionChain(record.no,record.index,record)">
+                                                    進化ポケモン表示
+                                                </v-btn>
                                             </v-col>
+
                                         </v-row>
                                     </v-col>
                                 </v-row>
@@ -444,11 +454,12 @@
             await fetch('https://script.googleusercontent.com/macros/echo?user_content_key=8AfeX4RP96mTpE15odk--CFNT_GWlVEUF6_FGLfTRbi9RxDGR3SOTJ7CkYCp4hLN0L_t411YVrfvBomV77IPHgKSV8HI-0WQm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnARyiIdeCDuvmmR-sOwAnpEmTfWwE-RbrYGwoGRLqKklDfEgId7cMEIFEoI0ruGwFCzpkvaQDUotEWmyYUxKV2EEwZKnuwGAA9z9Jw9Md8uu&lib=M3h1_1ty_TS9LsWxMNmQenIa5QikDCKxm')
                 .then(result => result.json())
                 .then((output) => {
-                    app.vueFormData = [...output];
+                    app.vueFormData.push(...output);
 
                     app.vueFormData.forEach((e, i) => {
                         app.vueFormData[i]['daifukuObj'] = e['daifuku'] != "" ? JSON.parse(e['daifuku']) : null;
                         app.vueFormData[i]['point'] = app.subSkillValue(e) + app.personalityValue(e);
+                        app.vueFormData[i]['evolution'] = [];
                     }
                     )
 
@@ -456,14 +467,9 @@
                 .catch(err => console.error(err));
 
         },
-        methods: {
-            personality: function (key) {
-                if (app.database.personality[key].up === "") {
-                    return false;
-                }
-                return app.database.personality[key];
-            },
-            displayDataSet: function () {
+        computed: {
+            displayDataSet() {
+
                 var userTmp = app.vueFormData.filter(e => e.foo == app.user)
                 app.userCnt = userTmp.length
                 var tmp = userTmp.filter(e => app.multiButtonCheck(e))
@@ -474,6 +480,74 @@
                 app.pageLength = Math.ceil(tmp.length / app.pageSize);
 
                 return tmp.slice(app.pageSize * (app.page - 1), app.pageSize * (app.page));
+
+            },
+        },
+        methods: {
+            extractSpecies: function (data) {
+
+                var speciesList = []
+                const extract = (data) => {
+                    if ('species' in data) {
+                        speciesList.push(data['species']);
+                        if ('evolves_to' in data) {
+                            for (let item of data['evolves_to']) {
+                                extract(item);
+                            }
+                        }
+                    }
+                };
+
+                extract(data);
+
+                return speciesList
+            },
+            getPokemonEvolutionChain: async function (pokemonId, recordIndex, index) {
+                const speciesURL = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`;
+
+                await fetch(speciesURL)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('データの取得に失敗しました');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const evolutionChainURL = data['evolution_chain']['url'];
+                        return fetch(evolutionChainURL);
+                    })
+                    .then(evolutionResponse => {
+                        if (!evolutionResponse.ok) {
+                            throw new Error('進化情報の取得に失敗しました');
+                        }
+                        return evolutionResponse.json();
+                    })
+                    .then(evolutionData => {
+                        var speciesList = app.extractSpecies(evolutionData['chain']);
+                        console.log(speciesList); // 抽出された species データのリストを出力
+                        const idsArray = speciesList.map(item => {
+                            const id = item.url.split('/').filter(str => str !== '').pop();
+                            return parseInt(id);
+                        });
+                        console.log(idsArray); // 抽出された species データのリストを出力
+
+                        app.vueFormData[recordIndex - 1]['evolution'].splice(0)
+                        app.$set(app.vueFormData[recordIndex - 1], 'evolution', [...idsArray])
+                        app.vueFormData.push(null)
+                        app.vueFormData.pop()
+                        // this.record['evolution'].push(...idsArray)
+                        // app.displayData[recordIndex]['evolution'].push(...idsArray)
+
+                    })
+                    .catch(error => {
+                        console.error(error.message);
+                    });
+            },
+            personality: function (key) {
+                if (app.database.personality[key].up === "") {
+                    return false;
+                }
+                return app.database.personality[key];
             },
             pageUP: function () {
                 window.scroll(0, 0);

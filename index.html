@@ -302,15 +302,6 @@
                                                     v-if="record.ingredients0">出会った日:{{record.date}}{{'　'}}簡易査定:{{record.point}}</span>
                                             </v-col>
                                         </v-row>
-                                        <v-row v-if="record.evolution.length != 0">
-                                            <template v-for="item in record.evolution">
-                                                <v-img :src="getImage(item)" max-width="75"></v-img>
-                                            </template>
-                                        </v-row>
-                                        <v-row class="pa-5 ma-5" v-if="record.evolutionLoad==true">
-                                            <v-progress-circular :size="37.5" color="primary"
-                                                indeterminate></v-progress-circular>
-                                        </v-row>
                                         <v-row v-if="record.daifukuObj!=null">
                                             <v-col cols="12" class="pa-0 ma-0">
                                                 <span>だいふく査定{{'　'}}ランク:{{record.daifukuObj['ランク']}}{{'　'}}{{record.daifukuObj['評価値']}}{{'　'}}
@@ -318,12 +309,21 @@
                                                 </span>
                                                 <v-btn depressed
                                                     v-on:click="getPokemonEvolutionChain(record.no,record.index)">
-                                                    進化ポケモン表示
+                                                    進化/バージョンを表示
                                                 </v-btn>
+                                                <template class="" v-if="record.evolutionLoad==true">
+                                                    <v-progress-circular :size="22" color="primary"
+                                                        indeterminate></v-progress-circular>
+                                                </template>
                                             </v-col>
 
                                         </v-row>
                                     </v-col>
+                                </v-row>
+                                <v-row v-if="record.evolution.length != 0">
+                                    <template v-for="item in record.evolution">
+                                        <v-img :src="getImage(item)" max-width="85"></v-img>
+                                    </template>
                                 </v-row>
                             </v-card>
                         </template>
@@ -581,9 +581,9 @@
                 console.log(index)
                 app.vueFormData[index]['evolution'].splice(0)
                 app.$set(app.vueFormData[index], 'evolution', [...varieties])
+                app.$set(app.vueFormData[index], 'evolutionLoad', false)
                 app.vueFormData.push(null)
                 app.vueFormData.pop()
-                app.$set(app.vueFormData[index], 'evolutionLoad', false)
             },
             personality: function (key) {
                 if (app.database.personality[key].up === "") {

@@ -322,7 +322,14 @@
                                 </v-row>
                                 <v-row v-if="record.evolution.length != 0">
                                     <template v-for="item in record.evolution">
-                                        <v-img :src="getImage(item)" max-width="85"></v-img>
+                                        <v-tooltip top>
+                                            <template v-slot:activator="{ on, attrs }">
+                                                <sapn v-bind="attrs" v-on="on">
+                                                    <v-img :src="getImage(item.id)" max-width="85"></v-img>
+                                                </sapn>
+                                            </template>
+                                            <span>{{item.name}}</span>
+                                        </v-tooltip>
                                     </template>
                                 </v-row>
                             </v-card>
@@ -540,13 +547,14 @@
                         console.error(error.message);
                     });
 
-                console.log(speciesList); // 抽出された species データのリストを出力
+                // console.log(speciesList); // 抽出された species データのリストを出力
                 const idsArray = speciesList.map(item => {
                     const id = item.url.split('/').filter(str => str !== '').pop();
                     return parseInt(id);
                 });
 
                 var varieties = []
+                var varietiesObjs = []
 
                 for (const e of idsArray) {
 
@@ -560,13 +568,23 @@
                         })
                         .then(data => {
                             const tmp = data['varieties'];
-
+                            const namesJa = data.names.filter(item => item.language.name === "ja").map(item => item.name);
+                            // console.log(namesJa);
                             varietiesConcat = tmp.map(variety => {
                                 const urlParts = variety.pokemon.url.split('/');
                                 return parseInt(urlParts[urlParts.length - 2]);
                             });
                             // console.log(varietiesConcat)
+                            tmpObj = {}
+                            tmpObj['name'] = namesJa[0]
+                            tmpObj['IDs'] = []
+
+                            varietiesConcat.forEach(id => {
+                                tmpObj["IDs"].push({ "id": String(id), "name": id == e ? namesJa[0] : "" });
+                            });
+
                             varieties.push(...varietiesConcat)
+                            varietiesObjs.push(tmpObj)
                         })
                         .catch(error => {
                             console.error(error.message);
@@ -574,13 +592,92 @@
 
                 }
 
+                for (let pokemon of varietiesObjs) {
+                    for (let entry of pokemon.IDs) {
+                        if (entry.name === "") {
+                            const formURL = `https://pokeapi.co/api/v2/pokemon/${entry.id}/`;
+                            // console.log(formURL)
+                            entry.name = await fetch(formURL)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('データの取得に失敗しました');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    const formsURL = data.forms[0].url;
+                                    // console.log(formsURL)
+                                    return fetch(formsURL);
+                                })
+                                .then(formResponse => {
+                                    if (!formResponse.ok) {
+                                        throw new Error('進化情報の取得に失敗しました');
+                                    }
+                                    return formResponse.json();
+                                })
+                                .then(formData => {
+                                    // console.log(formData)
+                                    const namesJa = formData.form_names.filter(item => item.language.name === "ja").map(item => item.name);
+
+                                    if (namesJa == '') {
+                                        const namesEn = formData.form_names.filter(item => item.language.name === "en").map(item => item.name);
+                                        if (namesEn == '') {
+                                            return pokemon.name
+                                        }
+                                        return namesEn[0]
+                                    }
+                                    // console.log(namesJa);
+                                    return namesJa[0]
+                                })
+                                .catch(error => {
+                                    console.error(error.message);
+                                });
+                        }
+                    }
+                }
+
+
+                // for (const e of varieties) {
+
+                //     const varietiesURL = `https://pokeapi.co/api/v2/pokemon-species/${e}/`;
+                //     await fetch(varietiesURL)
+                //         .then(response => {
+                //             if (!response.ok) {
+                //                 throw new Error('データの取得に失敗しました');
+                //             }
+                //             return response.json();
+                //         })
+                //         .then(data => {
+                //             const tmp = data['varieties'];
+
+                //             varietiesConcat = tmp.map(variety => {
+                //                 const urlParts = variety.pokemon.url.split('/');
+                //                 return parseInt(urlParts[urlParts.length - 2]);
+                //             });
+                //             // console.log(varietiesConcat)
+                //             varieties.push(...varietiesConcat)
+                //         })
+                //         .catch(error => {
+                //             console.error(error.message);
+                //         });
+
+                // }
+
+
+                var newIDs = [];
+
+                for (const entry of varietiesObjs) {
+                    newIDs.push(...entry.IDs);
+                }
 
                 // console.log(idsArray); // 抽出された species データのリストを出力
-                console.log(recordIndex)
+                // console.log(recordIndex)
 
-                console.log(index)
+                // console.log(varietiesObjs)
+                // console.log(newIDs)
+                // console.log(index)
                 app.vueFormData[index]['evolution'].splice(0)
-                app.$set(app.vueFormData[index], 'evolution', [...varieties])
+                app.$set(app.vueFormData[index], 'evolution', [...newIDs])
                 app.$set(app.vueFormData[index], 'evolutionLoad', false)
                 app.vueFormData.push(null)
                 app.vueFormData.pop()

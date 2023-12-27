@@ -191,8 +191,8 @@
                                                 <span class="white--text text-body">{{record.foo}}</span>
                                             </v-avatar>
 
-                                            <v-img v-if="record['displayEvolution']==true" :src="getImage(record['displayItem'].id)"
-                                                max-width="180"
+                                            <v-img v-if="record['displayEvolution']==true"
+                                                :src="getImage(record['displayItem'].id)" max-width="180"
                                                 :style="[{ backgroundImage: 'url(https://827754.github.io/pmSleep/assets/normal.png)'},{backgroundSize:'cover'}]"></v-img>
                                             <v-img v-else-if="record.color=='色違い'" :src="getImage('shiny/'+record.no)"
                                                 max-width="180"
@@ -204,7 +204,8 @@
                                             No.{{record.no}} : {{record.pokemon}}
                                         </v-sheet>
 
-                                        <v-sheet v-if="record['displayEvolution']==true" class="text-subtitle-2 text-center">
+                                        <v-sheet v-if="record['displayEvolution']==true"
+                                            class="text-subtitle-2 text-center">
                                             {{record['displayItem'].name}}
                                         </v-sheet>
                                     </v-col>
@@ -303,41 +304,42 @@
                                                 </v-chip>
                                             </v-col>
                                         </v-row>
-                                        <v-row>
-                                            <v-col cols="12" class="pa-0 ma-0">
-                                                <span
-                                                    v-if="record.ingredients0">出会った日:{{record.date}}{{'　'}}簡易査定:{{record.point}}</span>
-                                            </v-col>
-                                        </v-row>
                                         <v-row v-if="record.daifukuObj!=null">
                                             <v-col cols="12" class="pa-0 ma-0">
                                                 <span>だいふく査定{{'　'}}ランク:{{record.daifukuObj['ランク']}}{{'　'}}{{record.daifukuObj['評価値']}}{{'　'}}
                                                     [{{parseNumber(record.daifukuObj['ポケモン個体'])}}/{{parseNumber(record.daifukuObj['理想個体'])}}]
                                                 </span>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row>
+                                            <v-col cols="12" class="pa-0 ma-0">
+                                                <span
+                                                    v-if="record.ingredients0">出会った日:{{record.date}}{{'　'}}簡易査定:{{record.point}}</span>
                                                 <v-btn depressed
                                                     v-on:click="getPokemonEvolutionChain(record.no,record.index)">
                                                     進化/バージョンを表示
                                                 </v-btn>
                                                 <template class="" v-if="record.evolutionLoad==true">
                                                     <v-progress-circular :size="22" color="primary"
-                                                    indeterminate></v-progress-circular>
+                                                        indeterminate></v-progress-circular>
                                                 </template>
                                                 <v-btn v-if="record.evolution.length!=0" depressed
-                                                    v-on:click="record['displayEvolution']=false;record.evolution.splice(0);reLoad()">
-                                                    <v-icon>mdi-trash-can-outline</v-icon>
+                                                    v-on:click="record['displayEvolution']=false;record['displayEvolutionArea']=false;reLoad()">
+                                                    非表示
                                                 </v-btn>
                                             </v-col>
-
                                         </v-row>
                                     </v-col>
                                 </v-row>
-                                <v-row v-if="record.evolution.length != 0">
+                                <v-row v-if="record.evolution.length != 0 && record.displayEvolutionArea==true">
+
                                     <template v-for="item in record.evolution">
 
-                                        <span v-on:click="record['displayEvolution']=true;record['displayItem']=item;reLoad()">
+                                        <span
+                                            v-on:click="record['displayEvolution']=true;record['displayItem']=item;reLoad()">
                                             <v-img :src="getImage(item.id)" max-width="85"></v-img>
                                         </span>
-                                        
+
                                     </template>
                                 </v-row>
                             </v-card>
@@ -482,6 +484,7 @@
                         app.vueFormData[i]['evolution'] = [];
                         app.vueFormData[i]['evolutionLoad'] = false;
                         app.vueFormData[i]['displayEvolution'] = false;
+                        app.vueFormData[i]['displayEvolutionArea'] = true;
                     }
                     )
 
@@ -506,7 +509,7 @@
             },
         },
         methods: {
-            reLoad: function (){
+            reLoad: function () {
                 app.vueFormData.push(null)
                 app.vueFormData.pop()
             },
@@ -530,6 +533,15 @@
             },
             getPokemonEvolutionChain: async function (pokemonId, recordIndex) {
                 var index = app.vueFormData.findIndex(({ index }) => index === recordIndex);
+                if (app.vueFormData[index]['evolution'].length != 0) {
+                    app.$set(app.vueFormData[index], 'displayEvolutionArea', true)
+                    app.vueFormData.push(null)
+                    app.vueFormData.pop()
+                    return
+                }
+                if (app.vueFormData[index]['evolutionLoad'] == true) {
+                    return
+                }
                 app.$set(app.vueFormData[index], 'evolutionLoad', true)
                 app.vueFormData.push(null)
                 app.vueFormData.pop()
@@ -637,10 +649,10 @@
                                         if (namesEn == '') {
                                             return pokemon.name
                                         }
-                                        return pokemon.name+":"+namesEn[0]
+                                        return pokemon.name + ":" + namesEn[0]
                                     }
                                     // console.log(namesJa);
-                                    return pokemon.name+":"+namesJa[0]
+                                    return pokemon.name + ":" + namesJa[0]
                                 })
                                 .catch(error => {
                                     console.error(error.message);
@@ -666,6 +678,7 @@
                 app.$set(app.vueFormData[index], 'evolutionLoad', false)
                 app.vueFormData.push(null)
                 app.vueFormData.pop()
+                app.$set(app.vueFormData[index], 'displayEvolutionArea', true)
             },
             personality: function (key) {
                 if (app.database.personality[key].up === "") {

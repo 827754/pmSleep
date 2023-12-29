@@ -26,48 +26,53 @@
             <v-content>
                 <v-container class="fix-width">
 
-                    <v-btn depressed v-on:click="changeUser(user);page=1">
-                        ユーザ切替
-                    </v-btn>
-                    <v-btn depressed v-on:click="sortArray('index')">
-                        登録<span v-if="sortKey=='index'&&sortDirection=='asc'">▲</span><span
-                            v-if="sortKey=='index'&&sortDirection=='desc'">▼</span><span
-                            v-if="sortKey!=='index'">{{'　'}}</span>
-                    </v-btn>
-                    <v-btn depressed v-on:click="sortArray('pokemon')">
-                        名前<span v-if="sortKey=='pokemon'&&sortDirection=='asc'">▲</span><span
-                            v-if="sortKey=='pokemon'&&sortDirection=='desc'">▼</span><span
-                            v-if="sortKey!=='pokemon'">{{'　'}}</span>
-                    </v-btn>
-                    <v-btn depressed v-on:click="sortArray('no')">
-                        図鑑<span v-if="sortKey=='no'&&sortDirection=='asc'">▲</span><span
-                            v-if="sortKey=='no'&&sortDirection=='desc'">▼</span><span
-                            v-if="sortKey!=='no'">{{'　'}}</span>
-                    </v-btn>
-                    <v-btn depressed v-on:click="sortArray('date')">
-                        日付<span v-if="sortKey=='date'&&sortDirection=='asc'">▲</span><span
-                            v-if="sortKey=='date'&&sortDirection=='desc'">▼</span><span
-                            v-if="sortKey!=='date'">{{'　'}}</span>
-                    </v-btn>
-                    <v-btn depressed v-on:click="sortArray('point')">
-                        査定<span v-if="sortKey=='point'&&sortDirection=='asc'">▲</span><span
-                            v-if="sortKey=='point'&&sortDirection=='desc'">▼</span><span
-                            v-if="sortKey!=='point'">{{'　'}}</span>
-                    </v-btn>
-                    <v-btn depressed v-on:click="sortArray('daifukuObjPoint')">
-                        ランク<span v-if="sortKey=='daifukuObjPoint'&&sortDirection=='asc'">▲</span><span
-                            v-if="sortKey=='daifukuObjPoint'&&sortDirection=='desc'">▼</span><span
-                            v-if="sortKey!=='daifukuObjPoint'">{{'　'}}</span>
-                    </v-btn>
-                    <v-btn depressed v-on:click="sortArray('daifukuObjStrong')">
-                        強さ<span v-if="sortKey=='daifukuObjStrong'&&sortDirection=='asc'">▲</span><span
-                            v-if="sortKey=='daifukuObjStrong'&&sortDirection=='desc'">▼</span><span
-                            v-if="sortKey!=='daifukuObjStrong'">{{'　'}}</span>
-                    </v-btn>
-                    <v-btn depressed
-                        v-on:click="berryBtn.splice(0);ingredientsBtn.splice(0);typeBtn.splice(0);subSkillBtn.splice(0);">
-                        絞り込み解除
-                    </v-btn>
+                    <div class="fix-width mt-2">
+                        <v-btn depressed v-on:click="changeUser(user);page=1">
+                            ユーザ切替
+                        </v-btn>
+                        <v-btn depressed v-on:click="sortArray('index')">
+                            登録順<span v-if="sortKey=='index'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='index'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='index'">{{'　'}}</span>
+                        </v-btn>
+                        <v-btn depressed v-on:click="sortArray('pokemon')">
+                            名前順<span v-if="sortKey=='pokemon'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='pokemon'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='pokemon'">{{'　'}}</span>
+                        </v-btn>
+                        <v-btn depressed v-on:click="sortArray('no')">
+                            図鑑順<span v-if="sortKey=='no'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='no'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='no'">{{'　'}}</span>
+                        </v-btn>
+                        <v-btn depressed v-on:click="sortArray('date')">
+                            日付順<span v-if="sortKey=='date'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='date'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='date'">{{'　'}}</span>
+                        </v-btn>
+                    </div>
+                    <div class="fix-width mt-2">
+                        <v-btn depressed v-on:click="sortArray('point')">
+                            簡易査定<span v-if="sortKey=='point'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='point'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='point'">{{'　'}}</span>
+                        </v-btn>
+                        <v-btn depressed v-on:click="sortArray('daifukuObjPoint')">
+                            だいふくランク<span v-if="sortKey=='daifukuObjPoint'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='daifukuObjPoint'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='daifukuObjPoint'">{{'　'}}</span>
+                        </v-btn>
+                        <v-btn depressed v-on:click="sortArray('daifukuObjStrong')">
+                            だいふく強さ<span v-if="sortKey=='daifukuObjStrong'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='daifukuObjStrong'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='daifukuObjStrong'">{{'　'}}</span>
+                        </v-btn>
+                        <v-btn depressed v-on:click="sortArray('RP')">
+                            タイプ査定<span v-if="sortKey=='RP'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='RP'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='RP'">{{'　'}}</span>
+                        </v-btn>
+                    </div>
                     <div class="fix-width mt-2">
                         <v-btn-toggle v-model="cookingBtn" dense tile borderless>
                             <v-btn class="px-5 mr-1" value="curryandstew">
@@ -80,6 +85,10 @@
                                 デザート・ドリンク
                             </v-btn>
                         </v-btn-toggle>
+                        <v-btn depressed
+                            v-on:click="berryBtn.splice(0);ingredientsBtn.splice(0);typeBtn.splice(0);subSkillBtn.splice(0);">
+                            絞り込み解除
+                        </v-btn>
                     </div>
 
                     <template v-if="database !== null" class="fix-width">
@@ -186,10 +195,15 @@
                             <v-card class="pa-5 ma-5 ml-0">
                                 <v-row>
                                     <v-col cols="3">
+                                        <v-layout>
+                                            <v-btn depressed color="red" class="white--text">
+                                                {{record.foo}}
+                                            </v-btn>
+                                        </v-layout>
                                         <v-layout justify-center>
-                                            <v-avatar color="red" size="35" class="absolute top-0 left-0">
+                                            <!-- <v-avatar color="red" size="35" class="absolute top-0 left-0">
                                                 <span class="white--text text-body">{{record.foo}}</span>
-                                            </v-avatar>
+                                            </v-avatar> -->
 
                                             <v-img v-if="record['displayEvolution']==true"
                                                 :src="getImage(record['displayItem'].id)" max-width="180"
@@ -235,7 +249,7 @@
                                                 </v-btn>
                                             </v-col>
                                         </v-row>
-                                        <v-row>
+                                        <!-- <v-row>
                                             <v-col cols="12" class="pa-0 ma-0">
                                                 <span>Lv10</span>
                                                 <v-chip class="ma-2" :color="getSkillColor(record.sub10)" label>
@@ -250,6 +264,83 @@
                                                     {{record.sub50}}
                                                 </v-chip>
                                             </v-col>
+                                        </v-row> -->
+
+                                        <!-- <v-row>
+                                            <v-col cols="12" class="pa-0 ma-0">
+                                                <span v-if="record.ingredients0" class="px-0">Lv0</span>
+                                                <v-chip v-if="record.ingredients0" class="ma-2 ml-1 pl-0 pr-2"
+                                                    color="grey-lighten-4" outlined label>
+                                                    <v-img :src="getImageDB(record.ingredients0)"
+                                                        max-width="25"></v-img>
+                                                    {{record.ingredients0}}
+                                                </v-chip>
+                                                <span v-if="record.ingredients30" class="px-0">Lv30</span>
+                                                <v-chip v-if="record.ingredients30" class="ma-2 ml-1 pl-0 pr-2"
+                                                    color="grey-lighten-4" outlined label>
+                                                    <v-img :src="getImageDB(record.ingredients30)"
+                                                        max-width="25"></v-img>
+                                                    {{record.ingredients30}}
+                                                </v-chip>
+                                                <span v-if="record.ingredients60" class="px-0">Lv60</span>
+                                                <v-chip v-if="record.ingredients60" class="ma-2 ml-1 pl-0 pr-2"
+                                                    color="grey-lighten-4" outlined label>
+                                                    <v-img :src="getImageDB(record.ingredients60)"
+                                                        max-width="25"></v-img>
+                                                    {{record.ingredients60}}
+                                                </v-chip>
+                                            </v-col>
+                                        </v-row> -->
+                                        <v-row>
+                                            <v-simple-table dense class="ma-0 mt-2">
+                                                <template v-slot:default>
+
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="px-1"></td>
+                                                            <td class="d-flex flex-nowrap align-center px-0 pl-1">
+                                                                <v-img :src="getImageDB(record.ingredients0)"
+                                                                    max-width="25"></v-img>
+                                                                {{record.ingredients0}}
+                                                            </td>
+                                                            <td class="px-1">Lv30</td>
+                                                            <td class="d-flex flex-nowrap align-center px-0 pl-1">
+                                                                <v-img :src="getImageDB(record.ingredients30)"
+                                                                    max-width="25"></v-img>
+                                                                {{record.ingredients30}}
+                                                            </td>
+                                                            <td class="px-1">Lv60</td>
+                                                            <td class="d-flex flex-nowrap align-center px-0 pl-1">
+                                                                <v-img :src="getImageDB(record.ingredients60)"
+                                                                    max-width="25"></v-img>
+                                                                {{record.ingredients60}}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="px-1">Lv10</td>
+                                                            <td class="px-0"> <v-chip class="ma-2"
+                                                                    :color="getSkillColor(record.sub10)" label>
+                                                                    {{record.sub10}}
+                                                                </v-chip>
+                                                            </td>
+                                                            <td class="px-1">Lv25</td>
+                                                            <td class="px-0">
+                                                                <v-chip class="ma-2"
+                                                                    :color="getSkillColor(record.sub25)" label>
+                                                                    {{record.sub25}}
+                                                                </v-chip>
+                                                            </td>
+                                                            <td class="px-1">Lv50</td>
+                                                            <td class="px-0">
+                                                                <v-chip class="ma-2"
+                                                                    :color="getSkillColor(record.sub50)" label>
+                                                                    {{record.sub50}}
+                                                                </v-chip>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </template>
+                                            </v-simple-table>
                                         </v-row>
                                         <v-row>
                                             <v-col cols="12" class="pa-0 ma-0 d-flex align-center">
@@ -280,41 +371,52 @@
                                             </v-col>
                                         </v-row>
                                         <v-row>
-                                            <v-col cols="12" class="pa-0 ma-0">
-                                                <span v-if="record.ingredients0" class="px-0">Lv0</span>
-                                                <v-chip v-if="record.ingredients0" class="ma-2 ml-1 pl-0 pr-2"
-                                                    color="grey-lighten-4" outlined label>
-                                                    <v-img :src="getImageDB(record.ingredients0)"
-                                                        max-width="25"></v-img>
-                                                    {{record.ingredients0}}
-                                                </v-chip>
-                                                <span v-if="record.ingredients30" class="px-0">Lv30</span>
-                                                <v-chip v-if="record.ingredients30" class="ma-2 ml-1 pl-0 pr-2"
-                                                    color="grey-lighten-4" outlined label>
-                                                    <v-img :src="getImageDB(record.ingredients30)"
-                                                        max-width="25"></v-img>
-                                                    {{record.ingredients30}}
-                                                </v-chip>
-                                                <span v-if="record.ingredients60" class="px-0">Lv60</span>
-                                                <v-chip v-if="record.ingredients60" class="ma-2 ml-1 pl-0 pr-2"
-                                                    color="grey-lighten-4" outlined label>
-                                                    <v-img :src="getImageDB(record.ingredients60)"
-                                                        max-width="25"></v-img>
-                                                    {{record.ingredients60}}
-                                                </v-chip>
-                                            </v-col>
+                                            <v-simple-table dense class="ma-0">
+                                                <template v-slot:default>
+                                                    <thead>
+                                                        <tr>
+                                                            <td>簡易査定</td>
+                                                            <td>タイプ査定/強さ【raenonx】</td>
+                                                            <td>ランク/査定/強さ【だいふく】</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>{{record.point}}</td>
+                                                            <td>
+                                                                <span
+                                                                    v-if="record.raenonx!=null">{{record.raenonx[0]}}{{'/100　'}}{{record.raenonx[1]}}</span>
+                                                                <span v-else>{{'　'}}</span>
+                                                            </td>
+                                                            <td v-if="record.daifukuObj!=null">
+                                                                <span
+                                                                    v-if="record.daifukuObj!=null">ランク:{{record.daifukuObj['ランク']}}{{'　'}}{{record.daifukuObj['評価値']}}
+                                                                    {{'　'}}[{{parseNumber(record.daifukuObj['ポケモン個体'])}}/{{parseNumber(record.daifukuObj['理想個体'])}}]</span>
+                                                                <span v-else>{{'　'}}</span>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </template>
+                                            </v-simple-table>
                                         </v-row>
-                                        <v-row v-if="record.daifukuObj!=null">
+                                        <!-- <v-row v-if="record.daifukuObj!=null">
                                             <v-col cols="12" class="pa-0 ma-0">
                                                 <span>だいふく査定{{'　'}}ランク:{{record.daifukuObj['ランク']}}{{'　'}}{{record.daifukuObj['評価値']}}{{'　'}}
                                                     [{{parseNumber(record.daifukuObj['ポケモン個体'])}}/{{parseNumber(record.daifukuObj['理想個体'])}}]
                                                 </span>
                                             </v-col>
                                         </v-row>
-                                        <v-row>
+                                        <v-row v-if="record.raenonx!=null">
                                             <v-col cols="12" class="pa-0 ma-0">
-                                                <span
-                                                    v-if="record.ingredients0">出会った日:{{record.date}}{{'　'}}簡易査定:{{record.point}}</span>
+                                                <span>タイプ査定{{'　'}}{{record.raenonx[0]}}{{'/100　'}}{{record.raenonx[1]}}{{'　'}}
+                                                </span>
+                                            </v-col>
+                                        </v-row> -->
+                                        <v-row>
+                                            <v-col cols="12" class="pa-0 ma-0 mt-2">
+                                                <!-- <span
+                                                    v-if="record.ingredients0">簡易査定{{'　'}}{{record.point}}{{'　'}}出会った日:{{record.date}}{{'　'}}</span> -->
+                                                <span v-if="record.ingredients0">出会った日:{{record.date}}{{'　'}}</span>
                                                 <v-btn depressed
                                                     v-on:click="getPokemonEvolutionChain(record.no,record.index)">
                                                     進化/バージョンを表示
@@ -433,6 +535,26 @@
         min-width: 940px;
         /* 例: 幅を300pxに固定 */
     }
+
+    thead td {
+        background-color: rgb(95, 172, 172);
+        color: rgb(255, 255, 255);
+    }
+
+    tbody td {
+        border-left: 1px solid rgba(0, 0, 0, .12);
+    }
+
+    tbody td:last-child {
+        border-right: 1px solid rgba(0, 0, 0, .12);
+    }
+    
+    tr:first-child td{
+        border-top: 1px solid rgba(0, 0, 0, .12);     
+    }
+    tr:last-child td{
+        border-bottom: 1px solid rgba(0, 0, 0, .12);     
+    }
 </style>
 
 <script>
@@ -480,6 +602,7 @@
 
                     app.vueFormData.forEach((e, i) => {
                         app.vueFormData[i]['daifukuObj'] = e['daifuku'] != "" ? JSON.parse(e['daifuku']) : null;
+                        app.vueFormData[i]['raenonx'] = e['raenonx'] != "" ? JSON.parse(e['raenonx']) : null;
                         app.vueFormData[i]['point'] = app.subSkillValue(e) + app.personalityValue(e);
                         app.vueFormData[i]['evolution'] = [];
                         app.vueFormData[i]['evolutionLoad'] = false;
@@ -844,13 +967,16 @@
                     let valueA;
                     let valueB;
 
-                    if (key == "daifukuObjPoint" | key == "daifukuObjStrong") {
+                    if (key == "daifukuObjPoint" | key == "daifukuObjStrong" | key == "RP") {
                         try {
                             if (key == "daifukuObjPoint") {
                                 valueA = app.parseDateOrNumber(a['daifukuObj']['評価値'])
                             }
                             if (key == "daifukuObjStrong") {
                                 valueA = app.parseDateOrNumber(a['daifukuObj']['ポケモン個体'])
+                            }
+                            if (key == "RP") {
+                                valueA = app.parseDateOrNumber(a['raenonx'][0])
                             }
                         } catch (error) {
                             valueA = 0
@@ -861,6 +987,9 @@
                             }
                             if (key == "daifukuObjStrong") {
                                 valueB = app.parseDateOrNumber(b['daifukuObj']['ポケモン個体'])
+                            }
+                            if (key == "RP") {
+                                valueB = app.parseDateOrNumber(b['raenonx'][0])
                             }
                         } catch (error) {
                             valueB = 0

@@ -195,7 +195,7 @@
                             <v-card class="pa-5 ma-5 ml-0">
                                 <v-row>
                                     <v-col cols="3" class="ma-0 pa-0">
-                                        <v-layout class="mb-2 ml-2"> 
+                                        <v-layout class="mb-2 ml-2">
                                             <v-btn depressed color="red" class="white--text">
                                                 {{record.foo}}
                                             </v-btn>
@@ -340,7 +340,8 @@
                                                         </tr>
                                                         <tr>
                                                             <!-- <td class="px-1"></td> -->
-                                                            <td class="px-2 text-right" colspan="2"> せいかく : {{record.personality}}
+                                                            <td class="px-2 text-right" colspan="2"> せいかく :
+                                                                {{record.personality}}
                                                             </td>
                                                             <td class="px-0">
                                                                 <template v-if="personality(record.personality)">
@@ -596,27 +597,27 @@
     }
 
     table thead tr:first-child>*:first-child {
-        border-radius: 10px 0 0 0;
+        border-radius: 5px 0 0 0;
     }
 
     table thead tr:first-child>*:last-child {
-        border-radius: 0 10px 0 0;
+        border-radius: 0 5px 0 0;
     }
 
     table tr:first-child>*:first-child {
-        border-radius: 10px 0 0 0;
+        border-radius: 5px 0 0 0;
     }
 
     table tr:first-child>*:last-child {
-        border-radius: 0 10px 0 0;
+        border-radius: 0 5px 0 0;
     }
 
     table tr:last-child>*:first-child {
-        border-radius: 0 0 0 10px;
+        border-radius: 0 0 0 5px;
     }
 
     table tr:last-child>*:last-child {
-        border-radius: 0 0 10px 0;
+        border-radius: 0 0 5px 0;
     }
 </style>
 
@@ -1020,7 +1021,7 @@
                 } else {
                     app.sortKey = key; // 新しいキーをセット
                     app.sortDirection = 'asc'; // 新しいキーに対して昇順でソートする
-                    if (key == "point" | key == "daifukuObjPoint" | key == "daifukuObjStrong") {
+                    if (key == "point" | key == "daifukuObjPoint" | key == "daifukuObjStrong" | key == "RP") {
                         app.sortDirection = 'desc'
                     }
                 }

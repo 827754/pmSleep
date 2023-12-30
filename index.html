@@ -297,94 +297,98 @@
                                             </v-col>
                                         </v-row> -->
                                         <v-row>
-                                            <v-simple-table dense class="ma-0 my-2">
-                                                <template v-slot:default>
+                                            <v-col cols="12" class="ma-0 pa-0 pr-2">
 
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="px-1"></td>
-                                                            <td class="d-flex flex-nowrap align-center px-0 px-1">
-                                                                <v-img :src="getImageDB(record.ingredients0)"
-                                                                    max-width="25"></v-img>
-                                                                {{record.ingredients0}}
-                                                            </td>
-                                                            <td class="px-1">Lv30</td>
-                                                            <td class="d-flex flex-nowrap align-center px-0 px-1">
-                                                                <v-img :src="getImageDB(record.ingredients30)"
-                                                                    max-width="25"></v-img>
-                                                                {{record.ingredients30}}
-                                                            </td>
-                                                            <td class="px-1">Lv60</td>
-                                                            <td class="d-flex flex-nowrap align-center px-0 px-1">
-                                                                <v-img :src="getImageDB(record.ingredients60)"
-                                                                    max-width="25"></v-img>
-                                                                {{record.ingredients60}}
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="px-1">Lv10</td>
-                                                            <td class="px-0"> <v-chip class="ma-1"
-                                                                    :color="getSkillColor(record.sub10)" label>
-                                                                    {{record.sub10}}
-                                                                </v-chip>
-                                                            </td>
-                                                            <td class="px-1">Lv25</td>
-                                                            <td class="px-0">
-                                                                <v-chip class="ma-1"
-                                                                    :color="getSkillColor(record.sub25)" label>
-                                                                    {{record.sub25}}
-                                                                </v-chip>
-                                                            </td>
-                                                            <td class="px-1">Lv50</td>
-                                                            <td class="px-0">
-                                                                <v-chip class="ma-1"
-                                                                    :color="getSkillColor(record.sub50)" label>
-                                                                    {{record.sub50}}
-                                                                </v-chip>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <!-- <td class="px-1"></td> -->
-                                                            <td class="px-2 text-right" colspan="2"> せいかく :
-                                                                {{record.personality}}
-                                                            </td>
-                                                            <td class="px-0">
-                                                                <template v-if="personality(record.personality)">
-                                                                    <span v-if="personality(record.personality).up"
-                                                                        class="red--text ma-1">▲▲</span>
-                                                                </template>
-                                                            </td>
-                                                            <td class="px-2">
-                                                                <template v-if="personality(record.personality)">
-                                                                    {{personality(record.personality).up}}
-                                                                    <!-- <v-chip v-if="personality(record.personality).up"
+                                                <v-simple-table dense class="ma-0 my-2">
+                                                    <template v-slot:default>
+
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="px-1" ></td>
+                                                                <td class="d-flex flex-nowrap align-center px-0 px-1">
+                                                                    <v-img :src="getImageDB(record.ingredients0)"
+                                                                        max-width="25"></v-img>
+                                                                    {{record.ingredients0}}
+                                                                </td>
+                                                                <td class="px-1">Lv30</td>
+                                                                <td class="d-flex flex-nowrap align-center px-0 px-1">
+                                                                    <v-img :src="getImageDB(record.ingredients30)"
+                                                                        max-width="25"></v-img>
+                                                                    {{record.ingredients30}}
+                                                                </td>
+                                                                <td class="px-1">Lv60</td>
+                                                                <td class="d-flex flex-nowrap align-center px-0 px-1">
+                                                                    <v-img :src="getImageDB(record.ingredients60)"
+                                                                        max-width="25"></v-img>
+                                                                    {{record.ingredients60}}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="px-1">Lv10</td>
+                                                                <td class="px-0"> <v-chip class="ma-1"
+                                                                        :color="getSkillColor(record.sub10)" label>
+                                                                        {{record.sub10}}
+                                                                    </v-chip>
+                                                                </td>
+                                                                <td class="px-1">Lv25</td>
+                                                                <td class="px-0">
+                                                                    <v-chip class="ma-1"
+                                                                        :color="getSkillColor(record.sub25)" label>
+                                                                        {{record.sub25}}
+                                                                    </v-chip>
+                                                                </td>
+                                                                <td class="px-1">Lv50</td>
+                                                                <td class="px-0">
+                                                                    <v-chip class="ma-1"
+                                                                        :color="getSkillColor(record.sub50)" label>
+                                                                        {{record.sub50}}
+                                                                    </v-chip>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <!-- <td class="px-1"></td> -->
+                                                                <td class="px-2 text-right" colspan="2"> せいかく :
+                                                                    {{record.personality}}
+                                                                </td>
+                                                                <td class="px-0">
+                                                                    <template v-if="personality(record.personality)">
+                                                                        <span v-if="personality(record.personality).up"
+                                                                            class="red--text ma-1">▲▲</span>
+                                                                    </template>
+                                                                </td>
+                                                                <td class="px-2">
+                                                                    <template v-if="personality(record.personality)">
+                                                                        {{personality(record.personality).up}}
+                                                                        <!-- <v-chip v-if="personality(record.personality).up"
                                                                         class="ma-1" color="red" outlined label>
                                                                     </v-chip> -->
-                                                                </template>
-                                                                <template v-else>
-                                                                    補正無し
-                                                                    <!-- <v-chip class="ma-1" color="green" outlined label> -->
-                                                                    </v-chip>
-                                                                </template>
-                                                            </td>
-                                                            <td class="px-0">
-                                                                <template v-if="personality(record.personality)">
-                                                                    <span v-if="personality(record.personality).down"
-                                                                        class="primary--text ma-1">▼▼</span>
-                                                                </template>
-                                                            </td>
-                                                            <td class="px-2">
-                                                                <template v-if="personality(record.personality)">
-                                                                    {{personality(record.personality).down}}
-                                                                    <!-- <v-chip v-if="personality(record.personality).down"
+                                                                    </template>
+                                                                    <template v-else>
+                                                                        補正無し
+                                                                        <!-- <v-chip class="ma-1" color="green" outlined label> -->
+                                                                        </v-chip>
+                                                                    </template>
+                                                                </td>
+                                                                <td class="px-0">
+                                                                    <template v-if="personality(record.personality)">
+                                                                        <span
+                                                                            v-if="personality(record.personality).down"
+                                                                            class="primary--text ma-1">▼▼</span>
+                                                                    </template>
+                                                                </td>
+                                                                <td class="px-2">
+                                                                    <template v-if="personality(record.personality)">
+                                                                        {{personality(record.personality).down}}
+                                                                        <!-- <v-chip v-if="personality(record.personality).down"
                                                                         class="ma-1" color="primary" outlined label>
                                                                     </v-chip> -->
-                                                                </template>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </template>
-                                            </v-simple-table>
+                                                                    </template>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </template>
+                                                </v-simple-table>
+                                            </v-col>
                                         </v-row>
                                         <!-- <v-row>
                                             <v-col cols="12" class="pa-0 ma-0 d-flex align-center">
@@ -415,41 +419,43 @@
                                             </v-col>
                                         </v-row> -->
                                         <v-row>
-                                            <v-simple-table dense class="ma-0">
-                                                <template v-slot:default>
-                                                    <thead>
-                                                        <tr>
-                                                            <td class="text-center">簡易</td>
-                                                            <td class="text-center">平均</td>
-                                                            <td>タイプ査定/強さ[raenonx]</td>
-                                                            <td>ランク/査定/強さ[だいふく]</td>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="text-center">{{record.point}}</td>
-                                                            <td class="text-center">
-                                                                <span
-                                                                    v-if="record.raenonx!=null|record.daifukuObj!=null">
-                                                                    {{Math.round((Number(record.raenonx[0])+Number(record.daifukuObj['評価値'].replace('%','')))/2)}}
-                                                                </span>
-                                                                <span v-else>{{'　'}}</span>
-                                                            </td>
-                                                            <td>
-                                                                <span
-                                                                    v-if="record.raenonx!=null">{{record.raenonx[0]}}{{'/100　'}}{{record.raenonx[1]}}</span>
-                                                                <span v-else>{{'　'}}</span>
-                                                            </td>
-                                                            <td>
-                                                                <span
-                                                                    v-if="record.daifukuObj!=null">ランク:{{record.daifukuObj['ランク']}}{{'　'}}{{record.daifukuObj['評価値']}}
-                                                                    {{'　'}}[{{parseNumber(record.daifukuObj['ポケモン個体'])}}/{{parseNumber(record.daifukuObj['理想個体'])}}]</span>
-                                                                <span v-else>{{'　'}}</span>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </template>
-                                            </v-simple-table>
+                                            <v-col cols="12" class="ma-0 pa-0 pr-2">
+                                                <v-simple-table dense class="ma-0">
+                                                    <template v-slot:default>
+                                                        <thead>
+                                                            <tr>
+                                                                <td class="text-center">簡易</td>
+                                                                <td class="text-center">平均</td>
+                                                                <td>タイプ査定/強さ[raenonx]</td>
+                                                                <td>ランク/査定/強さ[だいふく]</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="text-center">{{record.point}}</td>
+                                                                <td class="text-center">
+                                                                    <span
+                                                                        v-if="record.raenonx!=null|record.daifukuObj!=null">
+                                                                        {{Math.round((Number(record.raenonx[0])+Number(record.daifukuObj['評価値'].replace('%','')))/2)}}
+                                                                    </span>
+                                                                    <span v-else>{{'　'}}</span>
+                                                                </td>
+                                                                <td>
+                                                                    <span
+                                                                        v-if="record.raenonx!=null">{{record.raenonx[0]}}{{'/100　'}}{{record.raenonx[1]}}</span>
+                                                                    <span v-else>{{'　'}}</span>
+                                                                </td>
+                                                                <td>
+                                                                    <span
+                                                                        v-if="record.daifukuObj!=null">ランク:{{record.daifukuObj['ランク']}}{{'　'}}{{record.daifukuObj['評価値']}}
+                                                                        {{'　'}}[{{parseNumber(record.daifukuObj['ポケモン個体'])}}/{{parseNumber(record.daifukuObj['理想個体'])}}]</span>
+                                                                    <span v-else>{{'　'}}</span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </template>
+                                                </v-simple-table>
+                                            </v-col>
                                         </v-row>
                                         <!-- <v-row v-if="record.daifukuObj!=null">
                                             <v-col cols="12" class="pa-0 ma-0">
@@ -585,6 +591,7 @@
         /* width: 900px; */
         /* 例: 幅を300pxに固定 */
         min-width: 940px;
+        max-width: 1040px;
         /* 例: 幅を300pxに固定 */
     }
 

@@ -57,6 +57,16 @@
                                 v-if="sortKey=='point'&&sortDirection=='desc'">▼</span><span
                                 v-if="sortKey!=='point'">{{'　'}}</span>
                         </v-btn>
+                        <v-btn depressed v-on:click="sortArray('AVG')">
+                            査定平均<span v-if="sortKey=='AVG'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='AVG'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='AVG'">{{'　'}}</span>
+                        </v-btn>
+                        <v-btn depressed v-on:click="sortArray('RP')">
+                            タイプ査定<span v-if="sortKey=='RP'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='RP'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='RP'">{{'　'}}</span>
+                        </v-btn>
                         <v-btn depressed v-on:click="sortArray('daifukuObjPoint')">
                             だいふくランク<span v-if="sortKey=='daifukuObjPoint'&&sortDirection=='asc'">▲</span><span
                                 v-if="sortKey=='daifukuObjPoint'&&sortDirection=='desc'">▼</span><span
@@ -66,11 +76,6 @@
                             だいふく強さ<span v-if="sortKey=='daifukuObjStrong'&&sortDirection=='asc'">▲</span><span
                                 v-if="sortKey=='daifukuObjStrong'&&sortDirection=='desc'">▼</span><span
                                 v-if="sortKey!=='daifukuObjStrong'">{{'　'}}</span>
-                        </v-btn>
-                        <v-btn depressed v-on:click="sortArray('RP')">
-                            タイプ査定<span v-if="sortKey=='RP'&&sortDirection=='asc'">▲</span><span
-                                v-if="sortKey=='RP'&&sortDirection=='desc'">▼</span><span
-                                v-if="sortKey!=='RP'">{{'　'}}</span>
                         </v-btn>
                     </div>
                     <div class="fix-width mt-2">
@@ -414,20 +419,28 @@
                                                 <template v-slot:default>
                                                     <thead>
                                                         <tr>
-                                                            <td>簡易査定</td>
-                                                            <td>タイプ査定/強さ【raenonx】</td>
-                                                            <td>ランク/査定/強さ【だいふく】</td>
+                                                            <td class="text-center">簡易</td>
+                                                            <td class="text-center">平均</td>
+                                                            <td>タイプ査定/強さ[raenonx]</td>
+                                                            <td>ランク/査定/強さ[だいふく]</td>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         <tr>
-                                                            <td>{{record.point}}</td>
+                                                            <td class="text-center">{{record.point}}</td>
+                                                            <td class="text-center">
+                                                                <span
+                                                                    v-if="record.raenonx!=null|record.daifukuObj!=null">
+                                                                    {{Math.round((Number(record.raenonx[0])+Number(record.daifukuObj['評価値'].replace('%','')))/2)}}
+                                                                </span>
+                                                                <span v-else>{{'　'}}</span>
+                                                            </td>
                                                             <td>
                                                                 <span
                                                                     v-if="record.raenonx!=null">{{record.raenonx[0]}}{{'/100　'}}{{record.raenonx[1]}}</span>
                                                                 <span v-else>{{'　'}}</span>
                                                             </td>
-                                                            <td v-if="record.daifukuObj!=null">
+                                                            <td>
                                                                 <span
                                                                     v-if="record.daifukuObj!=null">ランク:{{record.daifukuObj['ランク']}}{{'　'}}{{record.daifukuObj['評価値']}}
                                                                     {{'　'}}[{{parseNumber(record.daifukuObj['ポケモン個体'])}}/{{parseNumber(record.daifukuObj['理想個体'])}}]</span>
@@ -1013,7 +1026,6 @@
                 }
                 return value;
             },
-
             sortArray(key) {
                 // クリックされたときにソートを実行するメソッド
                 if (app.sortKey === key) {
@@ -1021,7 +1033,7 @@
                 } else {
                     app.sortKey = key; // 新しいキーをセット
                     app.sortDirection = 'asc'; // 新しいキーに対して昇順でソートする
-                    if (key == "point" | key == "daifukuObjPoint" | key == "daifukuObjStrong" | key == "RP") {
+                    if (key == "point" | key == "daifukuObjPoint" | key == "daifukuObjStrong" | key == "RP" | key == "AVG") {
                         app.sortDirection = 'desc'
                     }
                 }
@@ -1031,7 +1043,7 @@
                     let valueA;
                     let valueB;
 
-                    if (key == "daifukuObjPoint" | key == "daifukuObjStrong" | key == "RP") {
+                    if (key == "daifukuObjPoint" | key == "daifukuObjStrong" | key == "RP" | key == "AVG") {
                         try {
                             if (key == "daifukuObjPoint") {
                                 valueA = app.parseDateOrNumber(a['daifukuObj']['評価値'])
@@ -1041,6 +1053,9 @@
                             }
                             if (key == "RP") {
                                 valueA = app.parseDateOrNumber(a['raenonx'][0])
+                            }
+                            if (key == "AVG") {
+                                valueA = Math.round((Number(a.raenonx[0]) + Number(a.daifukuObj['評価値'].replace('%', ''))) / 2)
                             }
                         } catch (error) {
                             valueA = 0
@@ -1054,6 +1069,9 @@
                             }
                             if (key == "RP") {
                                 valueB = app.parseDateOrNumber(b['raenonx'][0])
+                            }
+                            if (key == "AVG") {
+                                valueB = Math.round((Number(b.raenonx[0]) + Number(b.daifukuObj['評価値'].replace('%', ''))) / 2)
                             }
                         } catch (error) {
                             valueB = 0

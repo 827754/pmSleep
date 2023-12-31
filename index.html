@@ -91,7 +91,7 @@
                             </v-btn>
                         </v-btn-toggle>
                         <v-btn depressed
-                            v-on:click="berryBtn.splice(0);ingredientsBtn.splice(0);typeBtn.splice(0);subSkillBtn.splice(0);">
+                            v-on:click="berryBtn.splice(0);ingredientsBtn.splice(0);typeBtn.splice(0);subSkillBtn.splice(0);evolutionFilter.splice(0)">
                             絞り込み解除
                         </v-btn>
                     </div>
@@ -304,7 +304,7 @@
 
                                                         <tbody>
                                                             <tr>
-                                                                <td class="px-1" ></td>
+                                                                <td class="px-1"></td>
                                                                 <td class="d-flex flex-nowrap align-center px-0 px-1">
                                                                     <v-img :src="getImageDB(record.ingredients0)"
                                                                         max-width="25"></v-img>
@@ -476,14 +476,18 @@
                                                     v-if="record.ingredients0">簡易査定{{'　'}}{{record.point}}{{'　'}}出会った日:{{record.date}}{{'　'}}</span> -->
                                                 <span v-if="record.ingredients0">出会った日:{{record.date}}{{'　'}}</span>
                                                 <v-btn depressed
-                                                    v-on:click="getPokemonEvolutionChain(record.no,record.index)">
+                                                    v-on:click="getPokemonEvolutionChain(record.no,record.index,'filter')">
+                                                    進化系絞り込み
+                                                </v-btn>
+                                                <v-btn depressed
+                                                    v-on:click="getPokemonEvolutionChain(record.no,record.index,'disp')">
                                                     進化/バージョンを表示
                                                 </v-btn>
                                                 <template class="" v-if="record.evolutionLoad==true">
                                                     <v-progress-circular :size="22" color="primary"
                                                         indeterminate></v-progress-circular>
                                                 </template>
-                                                <v-btn v-if="record.evolution.length!=0" depressed
+                                                <v-btn v-if="record.displayEvolutionArea==true" depressed
                                                     v-on:click="record['displayEvolution']=false;record['displayEvolutionArea']=false;reLoad()">
                                                     非表示
                                                 </v-btn>
@@ -491,7 +495,7 @@
                                         </v-row>
                                     </v-col>
                                 </v-row>
-                                <v-row v-if="record.evolution.length != 0 && record.displayEvolutionArea==true">
+                                <v-row v-if="record.displayEvolutionArea==true">
 
                                     <template v-for="item in record.evolution">
 
@@ -667,6 +671,7 @@
             pageSize: 20,
             userCnt: 0,
             displayCnt: 0,
+            evolutionFilter: []
         },
         mounted: async function () {
 
@@ -691,7 +696,7 @@
                         app.vueFormData[i]['evolution'] = [];
                         app.vueFormData[i]['evolutionLoad'] = false;
                         app.vueFormData[i]['displayEvolution'] = false;
-                        app.vueFormData[i]['displayEvolutionArea'] = true;
+                        app.vueFormData[i]['displayEvolutionArea'] = false;
                     }
                     )
 
@@ -705,13 +710,14 @@
                 var userTmp = app.vueFormData.filter(e => e.foo == app.user)
                 app.userCnt = userTmp.length
                 var tmp = userTmp.filter(e => app.multiButtonCheck(e))
-                if (app.displayCnt != tmp.length) {
+                var tmp2 = tmp.filter(e => app.evolutionCheck(e))
+                if (app.displayCnt != tmp2.length) {
                     app.page = 1
                 }
-                app.displayCnt = tmp.length
-                app.pageLength = Math.ceil(tmp.length / app.pageSize);
+                app.displayCnt = tmp2.length
+                app.pageLength = Math.ceil(tmp2.length / app.pageSize);
 
-                return tmp.slice(app.pageSize * (app.page - 1), app.pageSize * (app.page));
+                return tmp2.slice(app.pageSize * (app.page - 1), app.pageSize * (app.page));
 
             },
         },
@@ -738,13 +744,23 @@
 
                 return speciesList
             },
-            getPokemonEvolutionChain: async function (pokemonId, recordIndex) {
+            getPokemonEvolutionChain: async function (pokemonId, recordIndex, mode) {
                 var index = app.vueFormData.findIndex(({ index }) => index === recordIndex);
-                if (app.vueFormData[index]['evolution'].length != 0) {
-                    app.$set(app.vueFormData[index], 'displayEvolutionArea', true)
-                    app.vueFormData.push(null)
-                    app.vueFormData.pop()
-                    return
+                // 進化表示
+                if (mode == "disp") {
+                    if (app.vueFormData[index]['evolution'].length != 0) {
+                        app.$set(app.vueFormData[index], 'displayEvolutionArea', true)
+                        app.vueFormData.push(null)
+                        app.vueFormData.pop()
+                        return
+                    }
+                } else {
+                    if (app.vueFormData[index]['evolution'].length != 0) {
+                        app.evolutionFilter.splice(0)
+                        app.evolutionFilter = [...app.vueFormData[index]['evolution']]
+                        return
+                    }
+
                 }
                 if (app.vueFormData[index]['evolutionLoad'] == true) {
                     return
@@ -784,6 +800,7 @@
                     const id = item.url.split('/').filter(str => str !== '').pop();
                     return parseInt(id);
                 });
+
 
                 var varieties = []
                 var varietiesObjs = []
@@ -867,25 +884,27 @@
                         }
                     }
                 }
-
                 var newIDs = [];
 
                 for (const entry of varietiesObjs) {
                     newIDs.push(...entry.IDs);
                 }
 
-                // console.log(idsArray); // 抽出された species データのリストを出力
-                // console.log(recordIndex)
-
-                // console.log(varietiesObjs)
-                // console.log(newIDs)
-                // console.log(index)
                 app.vueFormData[index]['evolution'].splice(0)
                 app.$set(app.vueFormData[index], 'evolution', [...newIDs])
                 app.$set(app.vueFormData[index], 'evolutionLoad', false)
+
+                if (mode == "disp") {
+                    app.$set(app.vueFormData[index], 'displayEvolutionArea', true)
+
+                } else {
+                    app.evolutionFilter.splice(0)
+                    app.evolutionFilter = [...app.vueFormData[index]['evolution']]
+                    app.$set(app.vueFormData[index], 'displayEvolutionArea', false)
+                }
                 app.vueFormData.push(null)
                 app.vueFormData.pop()
-                app.$set(app.vueFormData[index], 'displayEvolutionArea', true)
+
             },
             personality: function (key) {
                 if (app.database.personality[key].up === "") {
@@ -961,6 +980,13 @@
                 });
 
                 return allValid.every(e => e == true)
+            },
+            evolutionCheck: function (record) {
+                if (app.evolutionFilter.length == 0) {
+                    return true
+                }
+
+                return app.evolutionFilter.some(obj => obj.id == record.no)
             },
             multiButtonCheck2: function (record) {
                 if (app.berryBtn.length == 0 &&

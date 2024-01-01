@@ -435,7 +435,7 @@
                                                                 <td class="text-center">{{record.point}}</td>
                                                                 <td class="text-center">
                                                                     <span
-                                                                        v-if="record.raenonx!=null|record.daifukuObj!=null">
+                                                                        v-if="record.raenonx!=null&&record.daifukuObj!=null">
                                                                         {{Math.round((Number(record.raenonx[0])+Number(record.daifukuObj['評価値'].replace('%','')))/2)}}
                                                                     </span>
                                                                     <span v-else>{{'　'}}</span>

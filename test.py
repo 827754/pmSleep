@@ -74,7 +74,7 @@ for rows in range(len(dataraw)):
     if NameFlag != "やご":
         sleep(2)
         iDbtn = driver.find_element(
-            By.XPATH, "/html/body/main/div/article/form/div[1]/div[2]/div[2]/label[4]"
+            By.XPATH, "//label[text()='50']"
         )
         iDbtn.click()
 

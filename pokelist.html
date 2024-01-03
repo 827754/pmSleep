@@ -22,141 +22,472 @@
 
 <body>
     <div id="app">
-        <v-app class="fix-width">
-            <v-content class="fix-width">
+        <v-app>
+            <v-content>
                 <v-container class="fix-width">
 
-                    <v-btn depressed v-on:click="changeUser(user)">
-                        ユーザー切り替え
-                    </v-btn>
-                    <v-btn depressed v-on:click="sortArray('index')">
-                        登録順<span v-if="sortKey=='index'&&sortDirection=='asc'">▲</span><span
-                            v-if="sortKey=='index'&&sortDirection=='desc'">▼</span><span
-                            v-if="sortKey!=='index'">{{'　'}}</span>
-                    </v-btn>
-                    <v-btn depressed v-on:click="sortArray('pokemon')">
-                        名前順<span v-if="sortKey=='pokemon'&&sortDirection=='asc'">▲</span><span
-                            v-if="sortKey=='pokemon'&&sortDirection=='desc'">▼</span><span
-                            v-if="sortKey!=='pokemon'">{{'　'}}</span>
-                    </v-btn>
-                    <v-btn depressed v-on:click="sortArray('no')">
-                        図鑑順<span v-if="sortKey=='no'&&sortDirection=='asc'">▲</span><span
-                            v-if="sortKey=='no'&&sortDirection=='desc'">▼</span><span
-                            v-if="sortKey!=='no'">{{'　'}}</span>
-                    </v-btn>
-                    <v-btn depressed v-on:click="sortArray('date')">
-                        日付順<span v-if="sortKey=='date'&&sortDirection=='asc'">▲</span><span
-                            v-if="sortKey=='date'&&sortDirection=='desc'">▼</span><span
-                            v-if="sortKey!=='date'">{{'　'}}</span>
-                    </v-btn>
+                    <div class="fix-width mt-2">
+                        <v-btn depressed v-on:click="changeUser(user);page=1">
+                            ユーザ切替
+                        </v-btn>
+                        <v-btn depressed v-on:click="sortArray('index')">
+                            登録順<span v-if="sortKey=='index'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='index'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='index'">{{'　'}}</span>
+                        </v-btn>
+                        <v-btn depressed v-on:click="sortArray('pokemon')">
+                            名前順<span v-if="sortKey=='pokemon'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='pokemon'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='pokemon'">{{'　'}}</span>
+                        </v-btn>
+                        <v-btn depressed v-on:click="sortArray('no')">
+                            図鑑順<span v-if="sortKey=='no'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='no'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='no'">{{'　'}}</span>
+                        </v-btn>
+                        <v-btn depressed v-on:click="sortArray('date')">
+                            日付順<span v-if="sortKey=='date'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='date'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='date'">{{'　'}}</span>
+                        </v-btn>
+                        <v-btn depressed v-on:click="sortArray('point')">
+                            査定順<span v-if="sortKey=='point'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='point'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='point'">{{'　'}}</span>
+                        </v-btn>
+                        <v-btn depressed
+                            v-on:click="berryBtn.splice(0);ingredientsBtn.splice(0);typeBtn.splice(0);subSkillBtn.splice(0);evolutionFilter.splice(0)">
+                            絞り込み解除
+                        </v-btn>
+                    </div>
 
-                    <template v-for="(record,index) in vueFormData">
-                        <v-card class="pa-5 ma-5 ml-0 fix-width" v-if="record.foo==user">
-                            <v-row>
-                                <v-col cols="3">
-                                    <v-layout justify-center>
-                                        <v-avatar color="red" size="35" class="absolute top-0 left-0">
-                                            <span class="white--text text-body">{{record.foo}}</span>
-                                        </v-avatar>
-                                        <v-img :src="getImage(record.no)" max-width="180"></v-img>
-                                    </v-layout>
-                                    <v-sheet class="text-h6 text-center">
-                                        No.{{record.no}} : {{record.pokemon}}
-                                    </v-sheet>
-                                </v-col>
-                                <!-- </v-col> -->
-                                <v-col>
-                                    <v-row>
-                                        <v-col cols="12" class="pa-0 ma-0 mb-2">
-                                            <span>メインスキル</span>
-                                            <v-btn depressed>
-                                                {{record.skill}}
-                                            </v-btn>
-                                            <span>きのみ</span>
-                                            <v-btn depressed>
-                                                <v-img :src="getImageDB(record.berry)" max-width="25"></v-img>
-                                                {{record.berry}}
-                                                </v-img>
-                                            </v-btn>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row>
-                                        <v-col cols="12" class="pa-0 ma-0">
-                                            <span>Lv10</span>
-                                            <v-chip class="ma-2" :color="getSkillColor(record.sub10)" label>
-                                                {{record.sub10}}
-                                            </v-chip>
-                                            <span>Lv25</span>
-                                            <v-chip class="ma-2" :color="getSkillColor(record.sub25)" label>
-                                                {{record.sub25}}
-                                            </v-chip>
-                                            <span>Lv50</span>
-                                            <v-chip class="ma-2" :color="getSkillColor(record.sub50)" label>
-                                                {{record.sub50}}
-                                            </v-chip>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row>
-                                        <v-col cols="12" class="pa-0 ma-0">
-                                            <span>せいかく:</span>
-                                            <v-chip v-if="record.personality" class="ma-2" color="black" outlined>
-                                                {{record.personality}}
-                                            </v-chip>
-                                            <span v-if="personality(record.personality)">
-                                                <span v-if="personality(record.personality).up"
-                                                    class="text-h5 red--text">▲▲</span>
-                                                <v-chip v-if="personality(record.personality).up" class="ma-2"
-                                                    color="red" outlined label>
-                                                    {{personality(record.personality).up}}
-                                                </v-chip>
-                                                <span v-if="personality(record.personality).down"
-                                                    class="text-h5 primary--text">▼▼</span>
-                                                <v-chip v-if="personality(record.personality).down" class="ma-2"
-                                                    color="primary" outlined label>
-                                                    {{personality(record.personality).down}}
-                                                </v-chip>
-                                            </span>
-                                            <span v-else>
-                                                <v-chip class="ma-2" color="green" outlined label>
-                                                    補正無し
-                                                </v-chip>
-                                            </span>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row>
-                                        <v-col cols="12" class="pa-0 ma-0">
-                                            <span v-if="record.ingredients0" class="px-0">Lv0</span>
-                                            <v-chip v-if="record.ingredients0" class="ma-2 ml-1 pl-0 pr-2"
-                                                color="grey-lighten-4" outlined label>
-                                                <v-img :src="getImageDB(record.ingredients0)" max-width="25"></v-img>
-                                                {{record.ingredients0}}
-                                            </v-chip>
-                                            <span v-if="record.ingredients30" class="px-0">Lv30</span>
-                                            <v-chip v-if="record.ingredients30" class="ma-2 ml-1 pl-0 pr-2"
-                                                color="grey-lighten-4" outlined label>
-                                                <v-img :src="getImageDB(record.ingredients30)" max-width="25"></v-img>
-                                                {{record.ingredients30}}
-                                            </v-chip>
-                                            <span v-if="record.ingredients60" class="px-0">Lv60</span>
-                                            <v-chip v-if="record.ingredients60" class="ma-2 ml-1 pl-0 pr-2"
-                                                color="grey-lighten-4" outlined label>
-                                                <v-img :src="getImageDB(record.ingredients60)" max-width="25"></v-img>
-                                                {{record.ingredients60}}
-                                            </v-chip>
-                                        </v-col>
-                                    </v-row>
-                                    <v-row>
-                                        <v-col cols="12" class="pa-0 ma-0">
-                                            <span v-if="record.ingredients0">出会った日:{{record.date}}</span>
-                                        </v-col>
-                                    </v-row>
-                                </v-col>
-                            </v-row>
+                    <template v-if="database !== null" class="fix-width">
+                        <v-card class="pa-0 ma-5 ml-0 mt-2" class="fix-width" flat>
+                            <v-expansion-panels>
+                                <v-expansion-panel>
+                                    <v-expansion-panel-header class="">
+                                        <div class="px-0 d-flex flex-row">
+                                            <v-icon>mdi-magnify</v-icon><span class="pt-1 pl-1">絞り込み</span>
+                                        </div>
+                                    </v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        <div class="mb-2 d-flex align-center">
+                                            <v-btn-toggle v-model="typeBtn" multiple dense tile borderless>
+                                                <template v-for="(value,key) in database.type">
+                                                    <v-btn class="px-5 mr-1" :value="key">
+                                                        {{key}}
+                                                    </v-btn>
+                                                </template>
+                                            </v-btn-toggle>
+                                            <v-btn-toggle v-model="colorBtn" multiple dense tile borderless>
+                                                <v-btn class="px-5 mr-1" value="true">
+                                                    <v-img
+                                                        :src="'https://827754.github.io/pmSleep/assets/coloricon.png'"
+                                                        max-width="25"></v-img>
+                                                    </v-img>
+                                                </v-btn>
+                                            </v-btn-toggle>
+                                        </div>
+                                        <div class="mb-2">
+                                            <v-btn-toggle v-model="berryBtn" multiple>
+                                                <template v-for="(berry,index) in database.berry">
+                                                    <v-btn class="px-0" :value="berry">
+                                                        <v-img :src="getImageDB(berry)" max-width="36"></v-img>
+                                                        <!-- {{berry}} -->
+                                                        </v-img>
+                                                    </v-btn>
+                                                </template>
+                                            </v-btn-toggle>
+                                        </div>
+                                        <div class="mb-2">
+                                            <v-btn-toggle v-model="ingredientsBtn" multiple>
+                                                <template v-for="(ingredients,index) in database.ingredients">
+                                                    <v-btn class="px-0" :value="ingredients">
+                                                        <v-img :src="getImageDB(ingredients)" max-width="36"></v-img>
+                                                        <!-- {{ingredients}} -->
+                                                        </v-img>
+                                                    </v-btn>
+                                                </template>
+                                            </v-btn-toggle>
+                                        </div>
+                                        <div>
+                                            <v-btn-toggle v-model="subSkillBtn" multiple dense
+                                                class="px-0 d-flex flex-wrap" tile borderless>
+                                                <template v-for="(value,key) in database.subSkill">
+                                                    <v-btn class="px-2 mr-1 mb-1" :value="key">
+                                                        <v-img :src="getImageDB(key)" max-width="74"></v-img>
+                                                        <!-- {{berry}} -->
+                                                        </v-img>
+                                                    </v-btn>
+                                                </template>
+                                            </v-btn-toggle>
+                                        </div>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                            </v-expansion-panels>
+
                         </v-card>
                     </template>
-                    <div class="dummy">
 
-                    </div>
+                    <template v-if="cookingBtn != null" class="fix-width">
+                        <v-card class="px-0 ma-5 ml-0 text-center d-flex justify-space-between align-center" flat>
+
+                            <v-img v-if="cookingBtn == 'curryandstew'"
+                                :src="'https://827754.github.io/pmSleep/assets/curryandstew.jpg'"
+                                max-width="900"></v-img>
+                            </v-img>
+                            <v-img v-if="cookingBtn == 'salad'"
+                                :src="'https://827754.github.io/pmSleep/assets/salad.jpg'" max-width="900"></v-img>
+                            </v-img>
+                            <v-img v-if="cookingBtn == 'dessertanddrink'"
+                                :src="'https://827754.github.io/pmSleep/assets/dessertanddrink.jpg'"
+                                max-width="900"></v-img>
+                            </v-img>
+
+                        </v-card>
+                    </template>
+
+                    <template class="fix-width">
+                        <v-card v-if="vueFormData.length !== 0"
+                            class="px-0 ma-5 ml-0 text-center d-flex justify-space-between align-center" flat>
+
+                            <span class="px-5 mx-5"> </span>
+                            <v-pagination v-model="page" :length="pageLength"></v-pagination>
+                            <v-btn class="">
+                                {{displayCnt}}/{{userCnt}}
+                            </v-btn>
+
+                        </v-card>
+                    </template>
+                    <template v-if="vueFormData.length !== 0">
+                        <template v-for="(record,index) in displayDataSet" class="fix-width">
+                            <!-- <v-card class="pa-5 ma-5 ml-0" v-if="record.foo==user&&multiButtonCheck(record)" -->
+                            <v-card class="pa-5 ma-5 ml-0">
+                                <v-row>
+                                    <v-col cols="3" class="ma-0 pa-0">
+                                        <v-layout class="mb-2 ml-2">
+                                            <v-btn depressed color="red" class="white--text">
+                                                {{record.foo}}
+                                            </v-btn>
+                                        </v-layout>
+                                        <v-layout justify-center>
+                                            <!-- <v-avatar color="red" size="35" class="absolute top-0 left-0">
+                                                <span class="white--text text-body">{{record.foo}}</span>
+                                            </v-avatar> -->
+
+                                            <v-img v-if="record['displayEvolution']==true"
+                                                :src="getImage(record['displayItem'].id)" max-width="180"
+                                                :style="[{ backgroundImage: 'url(https://827754.github.io/pmSleep/assets/normal.png)'},{backgroundSize:'cover'}]"></v-img>
+                                            <v-img v-else-if="record.color=='色違い'" :src="getImage('shiny/'+record.no)"
+                                                max-width="180"
+                                                :style="[{ backgroundImage: 'url(https://827754.github.io/pmSleep/assets/color.png)'},{backgroundSize:'cover'}]"></v-img>
+                                            <v-img v-else :src="getImage(record.no)" max-width="180"
+                                                :style="[{ backgroundImage: 'url(https://827754.github.io/pmSleep/assets/normal.png)'},{backgroundSize:'cover'}]"></v-img>
+                                        </v-layout>
+                                        <v-sheet v-if="record['displayEvolution']==false" class="text-h6 text-center">
+                                            No.{{record.no}} : {{record.pokemon}}
+                                        </v-sheet>
+
+                                        <v-sheet v-if="record['displayEvolution']==true"
+                                            class="text-subtitle-2 text-center">
+                                            {{record['displayItem'].name}}
+                                        </v-sheet>
+                                    </v-col>
+                                    <!-- </v-col> -->
+                                    <v-col>
+                                        <v-row>
+                                            <v-col cols="12" class="pa-0 ma-0">
+                                                <!-- <span>タイプ</span> -->
+                                                <v-btn depressed :color="getTypeColor(record.type)" class="white--text">
+                                                    {{record.type}}
+                                                </v-btn>
+                                                <span>メインスキル</span>
+                                                <v-btn depressed>
+                                                    {{record.skill}}
+                                                </v-btn>
+                                                <span>きのみ</span>
+                                                <v-btn depressed>
+                                                    <v-img :src="getImageDB(record.berry)" max-width="25"></v-img>
+                                                    {{record.berry}}
+                                                    </v-img>
+                                                </v-btn>
+                                                <v-btn depressed v-if="record.color=='色違い'" class="pa-0 ma-0">
+                                                    <v-img
+                                                        :src="'https://827754.github.io/pmSleep/assets/coloricon.png'"
+                                                        max-width="25"></v-img>
+                                                    </v-img>
+                                                </v-btn>
+                                            </v-col>
+                                        </v-row>
+                                        <!-- <v-row>
+                                            <v-col cols="12" class="pa-0 ma-0">
+                                                <span>Lv10</span>
+                                                <v-chip class="ma-2" :color="getSkillColor(record.sub10)" label>
+                                                    {{record.sub10}}
+                                                </v-chip>
+                                                <span>Lv25</span>
+                                                <v-chip class="ma-2" :color="getSkillColor(record.sub25)" label>
+                                                    {{record.sub25}}
+                                                </v-chip>
+                                                <span>Lv50</span>
+                                                <v-chip class="ma-2" :color="getSkillColor(record.sub50)" label>
+                                                    {{record.sub50}}
+                                                </v-chip>
+                                            </v-col>
+                                        </v-row> -->
+
+                                        <!-- <v-row>
+                                            <v-col cols="12" class="pa-0 ma-0">
+                                                <span v-if="record.ingredients0" class="px-0">Lv0</span>
+                                                <v-chip v-if="record.ingredients0" class="ma-2 ml-1 pl-0 pr-2"
+                                                    color="grey-lighten-4" outlined label>
+                                                    <v-img :src="getImageDB(record.ingredients0)"
+                                                        max-width="25"></v-img>
+                                                    {{record.ingredients0}}
+                                                </v-chip>
+                                                <span v-if="record.ingredients30" class="px-0">Lv30</span>
+                                                <v-chip v-if="record.ingredients30" class="ma-2 ml-1 pl-0 pr-2"
+                                                    color="grey-lighten-4" outlined label>
+                                                    <v-img :src="getImageDB(record.ingredients30)"
+                                                        max-width="25"></v-img>
+                                                    {{record.ingredients30}}
+                                                </v-chip>
+                                                <span v-if="record.ingredients60" class="px-0">Lv60</span>
+                                                <v-chip v-if="record.ingredients60" class="ma-2 ml-1 pl-0 pr-2"
+                                                    color="grey-lighten-4" outlined label>
+                                                    <v-img :src="getImageDB(record.ingredients60)"
+                                                        max-width="25"></v-img>
+                                                    {{record.ingredients60}}
+                                                </v-chip>
+                                            </v-col>
+                                        </v-row> -->
+                                        <v-row>
+                                            <v-col cols="12" class="ma-0 pa-0 pr-2">
+
+                                                <v-simple-table class="ma-0 my-4">
+                                                    <template v-slot:default>
+
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="px-1"></td>
+                                                                <td class="d-flex flex-nowrap align-center px-0 px-1">
+                                                                    <v-img :src="getImageDB(record.ingredients0)"
+                                                                        max-width="25"></v-img>
+                                                                    {{record.ingredients0}}
+                                                                </td>
+                                                                <td class="px-1">Lv30</td>
+                                                                <td class="d-flex flex-nowrap align-center px-0 px-1">
+                                                                    <v-img :src="getImageDB(record.ingredients30)"
+                                                                        max-width="25"></v-img>
+                                                                    {{record.ingredients30}}
+                                                                </td>
+                                                                <td class="px-1">Lv60</td>
+                                                                <td class="d-flex flex-nowrap align-center px-0 px-1">
+                                                                    <v-img :src="getImageDB(record.ingredients60)"
+                                                                        max-width="25"></v-img>
+                                                                    {{record.ingredients60}}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="px-1">Lv10</td>
+                                                                <td class="px-0"> <v-chip class="ma-1"
+                                                                        :color="getSkillColor(record.sub10)" label>
+                                                                        {{record.sub10}}
+                                                                    </v-chip>
+                                                                </td>
+                                                                <td class="px-1">Lv25</td>
+                                                                <td class="px-0">
+                                                                    <v-chip class="ma-1"
+                                                                        :color="getSkillColor(record.sub25)" label>
+                                                                        {{record.sub25}}
+                                                                    </v-chip>
+                                                                </td>
+                                                                <td class="px-1">Lv50</td>
+                                                                <td class="px-0">
+                                                                    <v-chip class="ma-1"
+                                                                        :color="getSkillColor(record.sub50)" label>
+                                                                        {{record.sub50}}
+                                                                    </v-chip>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <!-- <td class="px-1"></td> -->
+                                                                <td class="px-2 text-right" colspan="2"> せいかく :
+                                                                    {{record.personality}}
+                                                                </td>
+                                                                <td class="px-0">
+                                                                    <template v-if="personality(record.personality)">
+                                                                        <span v-if="personality(record.personality).up"
+                                                                            class="red--text ma-1">▲▲</span>
+                                                                    </template>
+                                                                </td>
+                                                                <td class="px-2">
+                                                                    <template v-if="personality(record.personality)">
+                                                                        {{personality(record.personality).up}}
+                                                                        <!-- <v-chip v-if="personality(record.personality).up"
+                                                                        class="ma-1" color="red" outlined label>
+                                                                    </v-chip> -->
+                                                                    </template>
+                                                                    <template v-else>
+                                                                        補正無し
+                                                                        <!-- <v-chip class="ma-1" color="green" outlined label> -->
+                                                                        </v-chip>
+                                                                    </template>
+                                                                </td>
+                                                                <td class="px-0">
+                                                                    <template v-if="personality(record.personality)">
+                                                                        <span
+                                                                            v-if="personality(record.personality).down"
+                                                                            class="primary--text ma-1">▼▼</span>
+                                                                    </template>
+                                                                </td>
+                                                                <td class="px-2">
+                                                                    <template v-if="personality(record.personality)">
+                                                                        {{personality(record.personality).down}}
+                                                                        <!-- <v-chip v-if="personality(record.personality).down"
+                                                                        class="ma-1" color="primary" outlined label>
+                                                                    </v-chip> -->
+                                                                    </template>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </template>
+                                                </v-simple-table>
+                                            </v-col>
+                                        </v-row>
+                                        <!-- <v-row>
+                                            <v-col cols="12" class="pa-0 ma-0 d-flex align-center">
+                                                <span class="ma-2">せいかく:{{record.personality}}</span> -->
+                                        <!-- <v-chip v-if="record.personality" class="ma-2" color="black" outlined>
+                                                {{record.personality}}
+                                            </v-chip> -->
+                                        <!-- <span v-if="personality(record.personality)"
+                                                    class="pa-0 ma-0 d-flex align-center">
+                                                    <span v-if="personality(record.personality).up"
+                                                        class="text-h5 red--text ma-1">▲▲</span>
+                                                    <v-chip v-if="personality(record.personality).up" class="ma-1"
+                                                        color="red" outlined label>
+                                                        {{personality(record.personality).up}}
+                                                    </v-chip>
+                                                    <span v-if="personality(record.personality).down"
+                                                        class="text-h5 primary--text ma-1">▼▼</span>
+                                                    <v-chip v-if="personality(record.personality).down" class="ma-1"
+                                                        color="primary" outlined label>
+                                                        {{personality(record.personality).down}}
+                                                    </v-chip>
+                                                </span>
+                                                <span v-else>
+                                                    <v-chip class="ma-2" color="green" outlined label>
+                                                        補正無し
+                                                    </v-chip>
+                                                </span>
+                                            </v-col>
+                                        </v-row> -->
+                                        <!-- <v-row>
+                                            <v-col cols="12" class="ma-0 pa-0 pr-2">
+                                                <v-simple-table dense class="ma-0">
+                                                    <template v-slot:default>
+                                                        <thead>
+                                                            <tr>
+                                                                <td class="text-center">簡易</td>
+                                                                <td class="text-center">平均</td>
+                                                                <td>タイプ査定/強さ[raenonx]</td>
+                                                                <td>ランク/査定/強さ[だいふく]</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="text-center">{{record.point}}</td>
+                                                                <td class="text-center">
+                                                                    <span
+                                                                        v-if="record.raenonx!=null&&record.daifukuObj!=null">
+                                                                        {{Math.round((Number(record.raenonx[0])+Number(record.daifukuObj['評価値'].replace('%','')))/2)}}
+                                                                    </span>
+                                                                    <span v-else>{{'　'}}</span>
+                                                                </td>
+                                                                <td>
+                                                                    <span
+                                                                        v-if="record.raenonx!=null">{{record.raenonx[0]}}{{'/100　'}}{{record.raenonx[1]}}</span>
+                                                                    <span v-else>{{'　'}}</span>
+                                                                </td>
+                                                                <td>
+                                                                    <span
+                                                                        v-if="record.daifukuObj!=null">ランク:{{record.daifukuObj['ランク']}}{{'　'}}{{record.daifukuObj['評価値']}}
+                                                                        {{'　'}}[{{parseNumber(record.daifukuObj['ポケモン個体'])}}/{{parseNumber(record.daifukuObj['理想個体'])}}]</span>
+                                                                    <span v-else>{{'　'}}</span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </template>
+                                                </v-simple-table>
+                                            </v-col>
+                                        </v-row> -->
+                                        <!-- <v-row v-if="record.daifukuObj!=null">
+                                            <v-col cols="12" class="pa-0 ma-0">
+                                                <span>だいふく査定{{'　'}}ランク:{{record.daifukuObj['ランク']}}{{'　'}}{{record.daifukuObj['評価値']}}{{'　'}}
+                                                    [{{parseNumber(record.daifukuObj['ポケモン個体'])}}/{{parseNumber(record.daifukuObj['理想個体'])}}]
+                                                </span>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row v-if="record.raenonx!=null">
+                                            <v-col cols="12" class="pa-0 ma-0">
+                                                <span>タイプ査定{{'　'}}{{record.raenonx[0]}}{{'/100　'}}{{record.raenonx[1]}}{{'　'}}
+                                                </span>
+                                            </v-col>
+                                        </v-row> -->
+                                        <v-row>
+                                            <v-col cols="12" class="pa-0 ma-0 mt-2">
+                                                <span
+                                                    v-if="record.ingredients0">査定{{':'}}{{record.point}}{{'　'}}出会った日:{{record.date}}{{'　'}}</span>
+                                                <!-- <span v-if="record.ingredients0">出会った日:{{record.date}}{{'　'}}</span> -->
+                                                <v-btn depressed
+                                                    v-on:click="getPokemonEvolutionChain(record.no,record.index,'filter')">
+                                                    進化系絞り込み
+                                                </v-btn>
+                                                <v-btn depressed
+                                                    v-on:click="getPokemonEvolutionChain(record.no,record.index,'disp')">
+                                                    進化/バージョンを表示
+                                                </v-btn>
+                                                <template class="" v-if="record.evolutionLoad==true">
+                                                    <v-progress-circular :size="22" color="primary"
+                                                        indeterminate></v-progress-circular>
+                                                </template>
+                                                <v-btn v-if="record.displayEvolutionArea==true" depressed
+                                                    v-on:click="record['displayEvolution']=false;record['displayEvolutionArea']=false;reLoad()">
+                                                    非表示
+                                                </v-btn>
+                                            </v-col>
+                                        </v-row>
+                                    </v-col>
+                                </v-row>
+                                <v-row v-if="record.displayEvolutionArea==true">
+
+                                    <template v-for="item in record.evolution">
+
+                                        <span
+                                            v-on:click="record['displayEvolution']=true;record['displayItem']=item;reLoad()">
+                                            <v-img :src="getImage(item.id)" max-width="85"></v-img>
+                                        </span>
+
+                                    </template>
+                                </v-row>
+                            </v-card>
+                        </template>
+                    </template>
+
+                    <template class="fix-width">
+                        <v-card v-if="vueFormData.length !== 0"
+                            class="px-0 ma-5 ml-0 text-center d-flex justify-space-between align-center" flat>
+
+                            <span class="px-5 mx-5"> </span>
+                            <v-pagination v-model="page" :length="pageLength" @input="pageUP"></v-pagination>
+                            <v-btn class="">
+                                {{displayCnt}}/{{userCnt}}
+                            </v-btn>
+
+                        </v-card>
+                    </template>
+
                 </v-container>
             </v-content>
         </v-app>
@@ -228,21 +559,84 @@
     .fix-width {
         /* width: 900px; */
         /* 例: 幅を300pxに固定 */
-        min-width: 900px;
+        min-width: 940px;
+        max-width: 1040px;
         /* 例: 幅を300pxに固定 */
+    }
+
+    thead td {
+        background-color: rgb(224, 255, 237);
+        /* color: rgb(255, 255, 255); */
+    }
+
+    tbody td {
+        border-left: 1px solid rgba(0, 0, 0, .12);
+    }
+
+    tbody td:last-child {
+        border-right: 1px solid rgba(0, 0, 0, .12);
+    }
+
+    tbody tr:first-child td {
+        border-top: 1px solid rgba(0, 0, 0, .12);
+    }
+
+    tbody tr:last-child td {
+        border-bottom: 1px solid rgba(0, 0, 0, .12);
+    }
+
+    table thead tr:first-child>*:first-child {
+        border-radius: 5px 0 0 0;
+    }
+
+    table thead tr:first-child>*:last-child {
+        border-radius: 0 5px 0 0;
+    }
+
+    table tr:first-child>*:first-child {
+        border-radius: 5px 0 0 0;
+    }
+
+    table tr:first-child>*:last-child {
+        border-radius: 0 5px 0 0;
+    }
+
+    table tr:last-child>*:first-child {
+        border-radius: 0 0 0 5px;
+    }
+
+    table tr:last-child>*:last-child {
+        border-radius: 0 0 5px 0;
     }
 </style>
 
 <script>
     var app = new Vue({
         el: "#app",
-        vuetify: new Vuetify(),
+        vuetify: new Vuetify({
+            icons: {
+                iconfont: 'mdi'
+            },
+        }),
         data: {
             vueFormData: [],
+            displayData: [],
             database: null,
             user: "フー",
             sortKey: 'index', // ソートするキーを保持するためのデータプロパティ
             sortDirection: 'asc', // 初期値は昇順
+            subSkillBtn: [],
+            typeBtn: [],
+            berryBtn: [],
+            ingredientsBtn: [],
+            cookingBtn: null,
+            colorBtn: '',
+            page: 1,
+            pageLength: 0,
+            pageSize: 20,
+            userCnt: 0,
+            displayCnt: 0,
+            evolutionFilter: []
         },
         mounted: async function () {
 
@@ -250,48 +644,276 @@
                 .then(result => result.json())
                 .then((output) => {
                     app.database = output;
+                    app.database['berry'] = [...output.berry];
+                    app.database['ingredients'] = [...output.ingredients];
                 })
                 .catch(err => console.error(err));
+
             await fetch('https://script.googleusercontent.com/macros/echo?user_content_key=8AfeX4RP96mTpE15odk--CFNT_GWlVEUF6_FGLfTRbi9RxDGR3SOTJ7CkYCp4hLN0L_t411YVrfvBomV77IPHgKSV8HI-0WQm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnARyiIdeCDuvmmR-sOwAnpEmTfWwE-RbrYGwoGRLqKklDfEgId7cMEIFEoI0ruGwFCzpkvaQDUotEWmyYUxKV2EEwZKnuwGAA9z9Jw9Md8uu&lib=M3h1_1ty_TS9LsWxMNmQenIa5QikDCKxm')
                 .then(result => result.json())
                 .then((output) => {
-                    app.vueFormData = [...output];
+                    app.vueFormData.push(...output);
+
+                    app.vueFormData.forEach((e, i) => {
+                        app.vueFormData[i]['daifukuObj'] = e['daifuku'] != "" ? JSON.parse(e['daifuku']) : null;
+                        app.vueFormData[i]['raenonx'] = e['raenonx'] != "" ? JSON.parse(e['raenonx']) : null;
+                        app.vueFormData[i]['point'] = app.subSkillValue(e) + app.personalityValue(e);
+                        app.vueFormData[i]['evolution'] = [];
+                        app.vueFormData[i]['evolutionLoad'] = false;
+                        app.vueFormData[i]['displayEvolution'] = false;
+                        app.vueFormData[i]['displayEvolutionArea'] = false;
+                    }
+                    )
+
                 })
                 .catch(err => console.error(err));
 
+        },
+        computed: {
+            displayDataSet() {
 
+                var userTmp = app.vueFormData.filter(e => e.foo == app.user)
+                app.userCnt = userTmp.length
+                var tmp = userTmp.filter(e => app.multiButtonCheck(e))
+                var tmp2 = tmp.filter(e => app.evolutionCheck(e))
+                if (app.displayCnt != tmp2.length) {
+                    app.page = 1
+                }
+                app.displayCnt = tmp2.length
+                app.pageLength = Math.ceil(tmp2.length / app.pageSize);
 
-            // await google.script.run
-            //     .withSuccessHandler(function (e) {
-            //         // console.log("a");
-            //         // console.log(e);
-            //         app.vueFormData = [...e];
-            //     })
-            //     .getData("data");
-            // await google.script.run
-            //     .withSuccessHandler(function (e) {
-            //         // console.log("a");
-            //         // console.log(e);
-            //         app.database = e;
+                return tmp2.slice(app.pageSize * (app.page - 1), app.pageSize * (app.page));
 
-            //         // (async () => {
-            //         //   // ... (await を使ったコード)
-            //         //   console.log(app.database.image)
-            //         //   await google.script.run.withSuccessHandler(function (e2) {
-            //         //     console.log(1)
-            //         //     console.log(e2)
-            //         //     app.imageUrls = e2
-            //         //   }).getFileUrl(app.database.image);
-            //         // })();
-            //     })
-            //     .getDB("data");
+            },
         },
         methods: {
+            reLoad: function () {
+                app.vueFormData.push(null)
+                app.vueFormData.pop()
+            },
+            extractSpecies: function (data) {
+
+                var speciesList = []
+                const extract = (data) => {
+                    if ('species' in data) {
+                        speciesList.push(data['species']);
+                        if ('evolves_to' in data) {
+                            for (let item of data['evolves_to']) {
+                                extract(item);
+                            }
+                        }
+                    }
+                };
+
+                extract(data);
+
+                return speciesList
+            },
+            getPokemonEvolutionChain: async function (pokemonId, recordIndex, mode) {
+                var index = app.vueFormData.findIndex(({ index }) => index === recordIndex);
+                // 進化表示
+                if (mode == "disp") {
+                    if (app.vueFormData[index]['evolution'].length != 0) {
+                        app.$set(app.vueFormData[index], 'displayEvolutionArea', true)
+                        app.vueFormData.push(null)
+                        app.vueFormData.pop()
+                        return
+                    }
+                } else {
+                    if (app.vueFormData[index]['evolution'].length != 0) {
+                        app.evolutionFilter.splice(0)
+                        app.evolutionFilter = [...app.vueFormData[index]['evolution']]
+                        return
+                    }
+
+                }
+                if (app.vueFormData[index]['evolutionLoad'] == true) {
+                    return
+                }
+                app.$set(app.vueFormData[index], 'evolutionLoad', true)
+                app.vueFormData.push(null)
+                app.vueFormData.pop()
+
+                const speciesURL = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`;
+                var speciesList = []
+                await fetch(speciesURL)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('データの取得に失敗しました');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const evolutionChainURL = data['evolution_chain']['url'];
+                        return fetch(evolutionChainURL);
+                    })
+                    .then(evolutionResponse => {
+                        if (!evolutionResponse.ok) {
+                            throw new Error('進化情報の取得に失敗しました');
+                        }
+                        return evolutionResponse.json();
+                    })
+                    .then(evolutionData => {
+                        speciesList = app.extractSpecies(evolutionData['chain']);
+                    })
+                    .catch(error => {
+                        console.error(error.message);
+                    });
+
+                // console.log(speciesList); // 抽出された species データのリストを出力
+                const idsArray = speciesList.map(item => {
+                    const id = item.url.split('/').filter(str => str !== '').pop();
+                    return parseInt(id);
+                });
+
+
+                var varieties = []
+                var varietiesObjs = []
+
+                for (const e of idsArray) {
+
+                    const varietiesURL = `https://pokeapi.co/api/v2/pokemon-species/${e}/`;
+                    await fetch(varietiesURL)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('データの取得に失敗しました');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            const tmp = data['varieties'];
+                            const namesJa = data.names.filter(item => item.language.name === "ja").map(item => item.name);
+                            // console.log(namesJa);
+                            varietiesConcat = tmp.map(variety => {
+                                const urlParts = variety.pokemon.url.split('/');
+                                return parseInt(urlParts[urlParts.length - 2]);
+                            });
+                            // console.log(varietiesConcat)
+                            tmpObj = {}
+                            tmpObj['name'] = namesJa[0]
+                            tmpObj['IDs'] = []
+
+                            varietiesConcat.forEach(id => {
+                                tmpObj["IDs"].push({ "id": String(id), "name": id == e ? namesJa[0] : "" });
+                            });
+
+                            varieties.push(...varietiesConcat)
+                            varietiesObjs.push(tmpObj)
+                        })
+                        .catch(error => {
+                            console.error(error.message);
+                        });
+
+                }
+
+                for (let pokemon of varietiesObjs) {
+                    for (let entry of pokemon.IDs) {
+                        if (entry.name === "") {
+                            const formURL = `https://pokeapi.co/api/v2/pokemon/${entry.id}/`;
+                            // console.log(formURL)
+                            entry.name = await fetch(formURL)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('データの取得に失敗しました');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    const formsURL = data.forms[0].url;
+                                    // console.log(formsURL)
+                                    return fetch(formsURL);
+                                })
+                                .then(formResponse => {
+                                    if (!formResponse.ok) {
+                                        throw new Error('進化情報の取得に失敗しました');
+                                    }
+                                    return formResponse.json();
+                                })
+                                .then(formData => {
+                                    // console.log(formData)
+                                    const namesJa = formData.form_names.filter(item => item.language.name === "ja").map(item => item.name);
+
+                                    if (namesJa == '') {
+                                        const namesEn = formData.form_names.filter(item => item.language.name === "en").map(item => item.name);
+                                        if (namesEn == '') {
+                                            return pokemon.name
+                                        }
+                                        return pokemon.name + ":" + namesEn[0]
+                                    }
+                                    // console.log(namesJa);
+                                    return pokemon.name + ":" + namesJa[0]
+                                })
+                                .catch(error => {
+                                    console.error(error.message);
+                                });
+                        }
+                    }
+                }
+                var newIDs = [];
+
+                for (const entry of varietiesObjs) {
+                    newIDs.push(...entry.IDs);
+                }
+
+                app.vueFormData[index]['evolution'].splice(0)
+                app.$set(app.vueFormData[index], 'evolution', [...newIDs])
+                app.$set(app.vueFormData[index], 'evolutionLoad', false)
+
+                if (mode == "disp") {
+                    app.$set(app.vueFormData[index], 'displayEvolutionArea', true)
+
+                } else {
+                    app.evolutionFilter.splice(0)
+                    app.evolutionFilter = [...app.vueFormData[index]['evolution']]
+                    app.$set(app.vueFormData[index], 'displayEvolutionArea', false)
+                }
+                app.vueFormData.push(null)
+                app.vueFormData.pop()
+
+            },
             personality: function (key) {
                 if (app.database.personality[key].up === "") {
                     return false;
                 }
                 return app.database.personality[key];
+            },
+            pageUP: function () {
+                window.scroll(0, 0);
+            },
+            subSkillValue: function (record) {
+                var subSkillValue = 10
+                for (const [key, obj] of Object.entries(app.database.subSkillData)) {
+                    var tmp = Number(obj[record.type])
+                    if (key == record.sub10) {
+                        subSkillValue = subSkillValue + tmp
+                    }
+                    if (key == record.sub25) {
+                        subSkillValue = subSkillValue + tmp
+                    }
+                    if (key == record.sub50) {
+                        subSkillValue = subSkillValue + (tmp * 0)
+                    }
+                }
+                return parseInt(subSkillValue * 1.1, 10)
+            },
+            personalityValue: function (record) {
+                if (record.type != "") {
+                    var personalityValue = 10
+
+                    for (const [key, obj] of Object.entries(app.database.personalityData)) {
+                        var tmp = Number(obj[record.type])
+                        if (key == app.database.personality[record.personality].up) {
+                            tmp = tmp * Number(obj.up)
+                            personalityValue = personalityValue + tmp
+                        }
+                        if (key == app.database.personality[record.personality].down) {
+                            tmp = tmp * Number(obj.down)
+                            personalityValue = personalityValue - tmp
+                        }
+                    }
+                    return parseInt(personalityValue * 0.9, 10)
+                }
+
             },
             getImage: function (no) {
                 return (
@@ -302,6 +924,62 @@
             },
             getImageDB: function (key) {
                 return "https://827754.github.io/pmSleep/assets/" + app.database.image[key];
+            },
+            multiButtonCheck: function (record) {
+                var allBtn = [app.berryBtn, app.ingredientsBtn, app.typeBtn, app.subSkillBtn]
+
+                var allValid = new Array(allBtn.length)
+                allValid.fill(true)
+
+                if (app.colorBtn == 'true') {
+                    if (record.color != '色違い') {
+                        return false
+                    }
+                }
+
+                allBtn.forEach((e, i) => {
+                    if (e.length !== 0) {
+                        allValid[i] = Object.values(record).some(value =>
+                            e.includes(value));
+                    }
+                });
+
+                return allValid.every(e => e == true)
+            },
+            evolutionCheck: function (record) {
+                if (app.evolutionFilter.length == 0) {
+                    return true
+                }
+
+                return app.evolutionFilter.some(obj => obj.id == record.no)
+            },
+            multiButtonCheck2: function (record) {
+                if (app.berryBtn.length == 0 &&
+                    app.ingredientsBtn.length == 0 &&
+                    app.typeBtn.length == 0 &&
+                    app.subSkillBtn.length == 0) {
+                    return true
+                }
+
+                var multiValid = Object.values(record).some(value =>
+                    app.berryBtn.includes(value) |
+                    app.ingredientsBtn.includes(value) |
+                    app.subSkillBtn.includes(value)
+                );
+
+                var typeValid = true;
+                if (app.typeBtn.length !== 0) {
+                    typeValid = Object.values(record).some(value =>
+                        app.typeBtn.includes(value));
+                    if (app.ingredientsBtn.length == 0 &&
+                        app.berryBtn.length == 0 &&
+                        app.subSkillBtn.length == 0
+                    ) {
+                        multiValid = true
+                    }
+                }
+
+                return multiValid && typeValid
             },
             getSkillColor: function (skill) {
                 var tmp = app.database.subSkill[skill];
@@ -315,12 +993,26 @@
                     return "grey lighten-3";
                 }
             },
+            getTypeColor: function (type) {
+                var tmp = app.database.type[type];
+                if (tmp == "orange") {
+                    // console.log("a");
+                    return "orange darken-2";
+                } else if (tmp == "green") {
+                    return "green";
+                } else {
+                    return "blue";
+                }
+            },
             changeUser: function (user) {
                 if (user == "フー") {
                     app.user = "やぐ";
                 } else {
                     app.user = "フー";
                 }
+            },
+            parseNumber(value) {
+                return parseFloat(parseInt(value));
             },
             parseDateOrNumber(value) {
                 const dateRegex = /\d{4}年\d{1,2}月\d{1,2}日/;
@@ -332,7 +1024,6 @@
                 }
                 return value;
             },
-
             sortArray(key) {
                 // クリックされたときにソートを実行するメソッド
                 if (app.sortKey === key) {
@@ -340,12 +1031,55 @@
                 } else {
                     app.sortKey = key; // 新しいキーをセット
                     app.sortDirection = 'asc'; // 新しいキーに対して昇順でソートする
+                    if (key == "point" | key == "daifukuObjPoint" | key == "daifukuObjStrong" | key == "RP" | key == "AVG") {
+                        app.sortDirection = 'desc'
+                    }
                 }
 
                 app.vueFormData = app.vueFormData.slice().sort((a, b) => {
 
-                    const valueA = this.parseDateOrNumber(a[key]);
-                    const valueB = this.parseDateOrNumber(b[key]);
+                    let valueA;
+                    let valueB;
+
+                    if (key == "daifukuObjPoint" | key == "daifukuObjStrong" | key == "RP" | key == "AVG") {
+                        try {
+                            if (key == "daifukuObjPoint") {
+                                valueA = app.parseDateOrNumber(a['daifukuObj']['評価値'])
+                            }
+                            if (key == "daifukuObjStrong") {
+                                valueA = app.parseDateOrNumber(a['daifukuObj']['ポケモン個体'])
+                            }
+                            if (key == "RP") {
+                                valueA = app.parseDateOrNumber(a['raenonx'][0])
+                            }
+                            if (key == "AVG") {
+                                valueA = Math.round((Number(a.raenonx[0]) + Number(a.daifukuObj['評価値'].replace('%', ''))) / 2)
+                            }
+                        } catch (error) {
+                            valueA = 0
+                        }
+                        try {
+                            if (key == "daifukuObjPoint") {
+                                valueB = app.parseDateOrNumber(b['daifukuObj']['評価値'])
+                            }
+                            if (key == "daifukuObjStrong") {
+                                valueB = app.parseDateOrNumber(b['daifukuObj']['ポケモン個体'])
+                            }
+                            if (key == "RP") {
+                                valueB = app.parseDateOrNumber(b['raenonx'][0])
+                            }
+                            if (key == "AVG") {
+                                valueB = Math.round((Number(b.raenonx[0]) + Number(b.daifukuObj['評価値'].replace('%', ''))) / 2)
+                            }
+                        } catch (error) {
+                            valueB = 0
+                        }
+
+                    } else {
+                        valueA = app.parseDateOrNumber(a[key]);
+                        valueB = app.parseDateOrNumber(b[key]);
+                    }
+
 
                     if (valueA instanceof Date && valueB instanceof Date) {
                         return app.sortDirection === 'asc' ? valueA.getTime() - valueB.getTime() : valueB.getTime() - valueA.getTime();

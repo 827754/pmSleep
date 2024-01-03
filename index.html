@@ -483,10 +483,6 @@
                                                     v-on:click="getPokemonEvolutionChain(record.no,record.index,'disp')">
                                                     進化/バージョンを表示
                                                 </v-btn>
-                                                <template class="" v-if="record.evolutionLoad==true">
-                                                    <v-progress-circular :size="22" color="primary"
-                                                        indeterminate></v-progress-circular>
-                                                </template>
                                                 <v-btn v-if="record.displayEvolutionArea==true" depressed
                                                     v-on:click="record['displayEvolution']=false;record['displayEvolutionArea']=false;reLoad()">
                                                     非表示
@@ -651,11 +647,12 @@
         vuetify: new Vuetify({
             icons: {
                 iconfont: 'mdi'
-            }, 
+            },
         }),
         data: {
             vueFormData: [],
             displayData: [],
+            evolutionData: null,
             database: null,
             user: "フー",
             sortKey: 'index', // ソートするキーを保持するためのデータプロパティ
@@ -684,6 +681,13 @@
                 })
                 .catch(err => console.error(err));
 
+            await fetch('https://827754.github.io/pmSleep/evolution.json')
+                .then(result => result.json())
+                .then((output) => {
+                    app.evolutionData = output;
+                })
+                .catch(err => console.error(err));
+
             await fetch('https://script.googleusercontent.com/macros/echo?user_content_key=8AfeX4RP96mTpE15odk--CFNT_GWlVEUF6_FGLfTRbi9RxDGR3SOTJ7CkYCp4hLN0L_t411YVrfvBomV77IPHgKSV8HI-0WQm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnARyiIdeCDuvmmR-sOwAnpEmTfWwE-RbrYGwoGRLqKklDfEgId7cMEIFEoI0ruGwFCzpkvaQDUotEWmyYUxKV2EEwZKnuwGAA9z9Jw9Md8uu&lib=M3h1_1ty_TS9LsWxMNmQenIa5QikDCKxm')
                 .then(result => result.json())
                 .then((output) => {
@@ -693,8 +697,12 @@
                         app.vueFormData[i]['daifukuObj'] = e['daifuku'] != "" ? JSON.parse(e['daifuku']) : null;
                         app.vueFormData[i]['raenonx'] = e['raenonx'] != "" ? JSON.parse(e['raenonx']) : null;
                         app.vueFormData[i]['point'] = app.subSkillValue(e) + app.personalityValue(e);
-                        app.vueFormData[i]['evolution'] = [];
-                        app.vueFormData[i]['evolutionLoad'] = false;
+                        tmp = app.evolutionData.find(obj => obj.id == e.no)
+                        let newIDs = []
+                        for (const entry of tmp.evolution) {
+                            newIDs.push(...entry.IDs);
+                        }
+                        app.vueFormData[i]['evolution'] = newIDs;
                         app.vueFormData[i]['displayEvolution'] = false;
                         app.vueFormData[i]['displayEvolutionArea'] = false;
                     }
@@ -748,162 +756,15 @@
                 var index = app.vueFormData.findIndex(({ index }) => index === recordIndex);
                 // 進化表示
                 if (mode == "disp") {
-                    if (app.vueFormData[index]['evolution'].length != 0) {
-                        app.$set(app.vueFormData[index], 'displayEvolutionArea', true)
-                        app.vueFormData.push(null)
-                        app.vueFormData.pop()
-                        return
-                    }
-                } else {
-                    if (app.vueFormData[index]['evolution'].length != 0) {
-                        app.evolutionFilter.splice(0)
-                        app.evolutionFilter = [...app.vueFormData[index]['evolution']]
-                        return
-                    }
-
-                }
-                if (app.vueFormData[index]['evolutionLoad'] == true) {
-                    return
-                }
-                app.$set(app.vueFormData[index], 'evolutionLoad', true)
-                app.vueFormData.push(null)
-                app.vueFormData.pop()
-
-                const speciesURL = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`;
-                var speciesList = []
-                await fetch(speciesURL)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('データの取得に失敗しました');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        const evolutionChainURL = data['evolution_chain']['url'];
-                        return fetch(evolutionChainURL);
-                    })
-                    .then(evolutionResponse => {
-                        if (!evolutionResponse.ok) {
-                            throw new Error('進化情報の取得に失敗しました');
-                        }
-                        return evolutionResponse.json();
-                    })
-                    .then(evolutionData => {
-                        speciesList = app.extractSpecies(evolutionData['chain']);
-                    })
-                    .catch(error => {
-                        console.error(error.message);
-                    });
-
-                // console.log(speciesList); // 抽出された species データのリストを出力
-                const idsArray = speciesList.map(item => {
-                    const id = item.url.split('/').filter(str => str !== '').pop();
-                    return parseInt(id);
-                });
-
-
-                var varieties = []
-                var varietiesObjs = []
-
-                for (const e of idsArray) {
-
-                    const varietiesURL = `https://pokeapi.co/api/v2/pokemon-species/${e}/`;
-                    await fetch(varietiesURL)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('データの取得に失敗しました');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            const tmp = data['varieties'];
-                            const namesJa = data.names.filter(item => item.language.name === "ja").map(item => item.name);
-                            // console.log(namesJa);
-                            varietiesConcat = tmp.map(variety => {
-                                const urlParts = variety.pokemon.url.split('/');
-                                return parseInt(urlParts[urlParts.length - 2]);
-                            });
-                            // console.log(varietiesConcat)
-                            tmpObj = {}
-                            tmpObj['name'] = namesJa[0]
-                            tmpObj['IDs'] = []
-
-                            varietiesConcat.forEach(id => {
-                                tmpObj["IDs"].push({ "id": String(id), "name": id == e ? namesJa[0] : "" });
-                            });
-
-                            varieties.push(...varietiesConcat)
-                            varietiesObjs.push(tmpObj)
-                        })
-                        .catch(error => {
-                            console.error(error.message);
-                        });
-
-                }
-
-                for (let pokemon of varietiesObjs) {
-                    for (let entry of pokemon.IDs) {
-                        if (entry.name === "") {
-                            const formURL = `https://pokeapi.co/api/v2/pokemon/${entry.id}/`;
-                            // console.log(formURL)
-                            entry.name = await fetch(formURL)
-                                .then(response => {
-                                    if (!response.ok) {
-                                        throw new Error('データの取得に失敗しました');
-                                    }
-                                    return response.json();
-                                })
-                                .then(data => {
-                                    const formsURL = data.forms[0].url;
-                                    // console.log(formsURL)
-                                    return fetch(formsURL);
-                                })
-                                .then(formResponse => {
-                                    if (!formResponse.ok) {
-                                        throw new Error('進化情報の取得に失敗しました');
-                                    }
-                                    return formResponse.json();
-                                })
-                                .then(formData => {
-                                    // console.log(formData)
-                                    const namesJa = formData.form_names.filter(item => item.language.name === "ja").map(item => item.name);
-
-                                    if (namesJa == '') {
-                                        const namesEn = formData.form_names.filter(item => item.language.name === "en").map(item => item.name);
-                                        if (namesEn == '') {
-                                            return pokemon.name
-                                        }
-                                        return pokemon.name + ":" + namesEn[0]
-                                    }
-                                    // console.log(namesJa);
-                                    return pokemon.name + ":" + namesJa[0]
-                                })
-                                .catch(error => {
-                                    console.error(error.message);
-                                });
-                        }
-                    }
-                }
-                var newIDs = [];
-
-                for (const entry of varietiesObjs) {
-                    newIDs.push(...entry.IDs);
-                }
-
-                app.vueFormData[index]['evolution'].splice(0)
-                app.$set(app.vueFormData[index], 'evolution', [...newIDs])
-                app.$set(app.vueFormData[index], 'evolutionLoad', false)
-
-                if (mode == "disp") {
                     app.$set(app.vueFormData[index], 'displayEvolutionArea', true)
-
+                    app.vueFormData.push(null)
+                    app.vueFormData.pop()
+                    return
                 } else {
                     app.evolutionFilter.splice(0)
                     app.evolutionFilter = [...app.vueFormData[index]['evolution']]
-                    app.$set(app.vueFormData[index], 'displayEvolutionArea', false)
+                    return
                 }
-                app.vueFormData.push(null)
-                app.vueFormData.pop()
 
             },
             personality: function (key) {

@@ -212,12 +212,12 @@
                                             </v-btn> 
 
                                             <v-btn v-if="record.daifukuObj!=null" depressed class="font-weight-black text-h6 mr-2" tile text outlined
-                                                :color="getRankColor(record.daifukuObj['ランク'])" max-width="20" min-width="20">
+                                                :color="getRankColor(record.daifukuObj['ランク'])" max-width="50" min-width="30">
                                                 {{record.daifukuObj['ランク']}}
                                             </v-btn>
 
                                             <v-btn v-if="record.daifukuObj!=null" depressed class="font-weight-black text-h6" tile text outlined
-                                                :color="getRankColor(record.daifukuObj['役割適正度'])" max-width="20" min-width="20">
+                                                :color="getRankColor(record.daifukuObj['役割適正度'])" max-width="50" min-width="30">
                                                 {{record.daifukuObj['役割適正度'].split(' ')[0].trim()}}
                                             </v-btn>
                                         </v-layout>

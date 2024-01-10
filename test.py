@@ -132,5 +132,5 @@ for rows in range(len(dataraw)):
         sheet.update_cell(rows + 1, daifukuCell, line.replace("\n", "").replace("\r", ""))
 
         checkBtn = driver.find_element(By.CLASS_NAME, "resetButton")
-        sleep(10)
+        sleep(5)
         checkBtn.click()

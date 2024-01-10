@@ -77,6 +77,11 @@
                                 v-if="sortKey=='daifukuObjStrong'&&sortDirection=='desc'">▼</span><span
                                 v-if="sortKey!=='daifukuObjStrong'">{{'　'}}</span>
                         </v-btn>
+                        <v-btn depressed v-on:click="sortArray('ROLE')">
+                            だいふく役割<span v-if="sortKey=='ROLE'&&sortDirection=='asc'">▲</span><span
+                                v-if="sortKey=='ROLE'&&sortDirection=='desc'">▼</span><span
+                                v-if="sortKey!=='ROLE'">{{'　'}}</span>
+                        </v-btn>
                     </div>
                     <div class="fix-width mt-2">
                         <v-btn-toggle v-model="cookingBtn" dense tile borderless>
@@ -201,7 +206,8 @@
                                 <v-row>
                                     <v-col cols="3" class="ma-0 pa-0">
                                         <v-layout class="mb-2 ml-2">
-                                            <v-btn depressed color="red" class="white--text">
+                                            <v-btn v-on:click="copyToClipboard(record)" depressed color="red"
+                                                class="white--text">
                                                 {{record.foo}}
                                             </v-btn>
                                         </v-layout>
@@ -428,6 +434,7 @@
                                                                 <td class="text-center">平均</td>
                                                                 <td>タイプ査定/強さ[raenonx]</td>
                                                                 <td>ランク/査定/強さ[だいふく]</td>
+                                                                <td>役割適正度[だいふく]</td>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -449,6 +456,12 @@
                                                                     <span
                                                                         v-if="record.daifukuObj!=null">ランク:{{record.daifukuObj['ランク']}}{{'　'}}{{record.daifukuObj['評価値']}}
                                                                         {{'　'}}[{{parseNumber(record.daifukuObj['ポケモン個体'])}}/{{parseNumber(record.daifukuObj['理想個体'])}}]</span>
+                                                                    <span v-else>{{'　'}}</span>
+                                                                </td>
+                                                                <td>
+                                                                    <span
+                                                                        v-if="record.daifukuObj['役割適正度']!=null">役割適正度:{{record.daifukuObj['役割適正度']}}</span>
+                                                                        
                                                                     <span v-else>{{'　'}}</span>
                                                                 </td>
                                                             </tr>
@@ -776,6 +789,17 @@
             pageUP: function () {
                 window.scroll(0, 0);
             },
+            copyToClipboard: function (record) {
+                let text = `${record.pokemon}/${record.date}/${record.personality}/${record.sub10}/${record.sub25}/${record.sub50}`
+
+                navigator.clipboard.writeText(text)
+                    .then(() => {
+                    })
+                    .catch(e => {
+                        console.error(e)
+                    })
+
+            },
             subSkillValue: function (record) {
                 var subSkillValue = 10
                 for (const [key, obj] of Object.entries(app.database.subSkillData)) {
@@ -927,17 +951,17 @@
                 } else {
                     app.sortKey = key; // 新しいキーをセット
                     app.sortDirection = 'asc'; // 新しいキーに対して昇順でソートする
-                    if (key == "point" | key == "daifukuObjPoint" | key == "daifukuObjStrong" | key == "RP" | key == "AVG") {
+                    if (key == "point" | key == "daifukuObjPoint" | key == "daifukuObjStrong" | key == "RP" | key == "AVG" | key == "ROLE") {
                         app.sortDirection = 'desc'
                     }
                 }
 
                 app.vueFormData = app.vueFormData.slice().sort((a, b) => {
-
+                    const regex = /-?\d+(\.\d+)?/;
                     let valueA;
                     let valueB;
 
-                    if (key == "daifukuObjPoint" | key == "daifukuObjStrong" | key == "RP" | key == "AVG") {
+                    if (key == "daifukuObjPoint" | key == "daifukuObjStrong" | key == "RP" | key == "AVG" | key == "ROLE") {
                         try {
                             if (key == "daifukuObjPoint") {
                                 valueA = app.parseDateOrNumber(a['daifukuObj']['評価値'])
@@ -950,6 +974,9 @@
                             }
                             if (key == "AVG") {
                                 valueA = Math.round((Number(a.raenonx[0]) + Number(a.daifukuObj['評価値'].replace('%', ''))) / 2)
+                            }
+                            if (key == "ROLE") {
+                                valueA = parseFloat(a.daifukuObj['役割適正度'].match(regex))
                             }
                         } catch (error) {
                             valueA = 0
@@ -966,6 +993,9 @@
                             }
                             if (key == "AVG") {
                                 valueB = Math.round((Number(b.raenonx[0]) + Number(b.daifukuObj['評価値'].replace('%', ''))) / 2)
+                            }
+                            if (key == "ROLE") {
+                                valueB = parseFloat(b.daifukuObj['役割適正度'].match(regex))
                             }
                         } catch (error) {
                             valueB = 0

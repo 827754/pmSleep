@@ -206,9 +206,19 @@
                                 <v-row>
                                     <v-col cols="3" class="ma-0 pa-0">
                                         <v-layout class="mb-2 ml-2">
-                                            <v-btn v-on:click="copyToClipboard(record)" depressed color="red"
-                                                class="white--text">
+                                            <v-btn v-on:click="copyToClipboard(record)" depressed color="red" tile
+                                                class="white--text mr-2">
                                                 {{record.foo}}
+                                            </v-btn> 
+
+                                            <v-btn v-if="record.daifukuObj!=null" depressed class="font-weight-black text-h6 mr-2" tile text outlined
+                                                :color="getRankColor(record.daifukuObj['ランク'])" max-width="20" min-width="20">
+                                                {{record.daifukuObj['ランク']}}
+                                            </v-btn>
+
+                                            <v-btn v-if="record.daifukuObj!=null" depressed class="font-weight-black text-h6" tile text outlined
+                                                :color="getRankColor(record.daifukuObj['役割適正度'])" max-width="20" min-width="20">
+                                                {{record.daifukuObj['役割適正度'].split(' ')[0].trim()}}
                                             </v-btn>
                                         </v-layout>
                                         <v-layout justify-center>
@@ -432,9 +442,8 @@
                                                             <tr>
                                                                 <td class="text-center">簡易</td>
                                                                 <td class="text-center">平均</td>
-                                                                <td>タイプ査定/強さ[raenonx]</td>
-                                                                <td>ランク/査定/強さ[だいふく]</td>
-                                                                <td>役割適正度[だいふく]</td>
+                                                                <td>ランク|割合|役割:だいふく</td>
+                                                                <td>中央値|割合:raenonx</td>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -449,19 +458,13 @@
                                                                 </td>
                                                                 <td>
                                                                     <span
+                                                                        v-if="record.daifukuObj!=null">ランク:{{record.daifukuObj['ランク']}}{{'|'}}{{record.daifukuObj['評価値']}}
+                                                                        {{''}}[{{parseNumber(record.daifukuObj['ポケモン個体'])}}/{{parseNumber(record.daifukuObj['理想個体'])}}]{{'|'}}役割:{{record.daifukuObj['役割適正度']}}</span>
+                                                                    <span v-else>{{'　'}}</span>
+                                                                </td>
+                                                                <td>
+                                                                    <span
                                                                         v-if="record.raenonx!=null">{{record.raenonx[0]}}{{'/100　'}}{{record.raenonx[1]}}</span>
-                                                                    <span v-else>{{'　'}}</span>
-                                                                </td>
-                                                                <td>
-                                                                    <span
-                                                                        v-if="record.daifukuObj!=null">ランク:{{record.daifukuObj['ランク']}}{{'　'}}{{record.daifukuObj['評価値']}}
-                                                                        {{'　'}}[{{parseNumber(record.daifukuObj['ポケモン個体'])}}/{{parseNumber(record.daifukuObj['理想個体'])}}]</span>
-                                                                    <span v-else>{{'　'}}</span>
-                                                                </td>
-                                                                <td>
-                                                                    <span
-                                                                        v-if="record.daifukuObj['役割適正度']!=null">役割適正度:{{record.daifukuObj['役割適正度']}}</span>
-                                                                        
                                                                     <span v-else>{{'　'}}</span>
                                                                 </td>
                                                             </tr>
@@ -924,6 +927,14 @@
                     return "blue";
                 }
             },
+            getRankColor: function (rank) {
+                var tmp = rank.split(' ')[0].trim();
+                if (app.database.rank.hasOwnProperty(tmp)) {
+                    return app.database.rank[tmp];
+                } else {
+                    return "";
+                }
+            },
             changeUser: function (user) {
                 if (user == "フー") {
                     app.user = "やぐ";
@@ -976,7 +987,7 @@
                                 valueA = Math.round((Number(a.raenonx[0]) + Number(a.daifukuObj['評価値'].replace('%', ''))) / 2)
                             }
                             if (key == "ROLE") {
-                                valueA = parseFloat(a.daifukuObj['役割適正度'].match(regex))
+                                valueA = Math.round((Number(parseFloat(a.daifukuObj['役割適正度'].match(regex))))) + 20
                             }
                         } catch (error) {
                             valueA = 0
@@ -995,7 +1006,7 @@
                                 valueB = Math.round((Number(b.raenonx[0]) + Number(b.daifukuObj['評価値'].replace('%', ''))) / 2)
                             }
                             if (key == "ROLE") {
-                                valueB = parseFloat(b.daifukuObj['役割適正度'].match(regex))
+                                valueB = Math.round((Number(parseFloat(b.daifukuObj['役割適正度'].match(regex))))) + 20
                             }
                         } catch (error) {
                             valueB = 0

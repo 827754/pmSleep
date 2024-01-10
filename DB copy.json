@@ -210,13 +210,13 @@
         "睡眠EXPボーナス": "gold"
     },
     "rank": {
-        "増田": "cyan lighten-1",
+        "増田": "purple",
         "SS": "amber",
         "S": "yellow",
-        "A": "pink lighten-3",
-        "B": "blue lighten-2",
-        "C": "green lighten-2",
-        "D": "blue grey lighten-3"
+        "A": "pink",
+        "B": "blue",
+        "C": "green",
+        "D": "blue-grey"
     },
     "type": {
         "きのみ": "green",

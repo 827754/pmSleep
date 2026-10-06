@@ -206,18 +206,17 @@ def select_evolution_count(driver, pokemon_name):
 # レベル変更（/checker/ と /checker/expected/ 双方で共通）
 # ---------------------------------------------------------------------------
 def set_level(driver, level):
-    """レベルスライダーとテキスト入力を使ってレベルを変更する。
+    """レベル入力欄 (levelDisplay) を直接変更し、input/change イベントを発火させる。
 
-    サイトの UI では range input が存在し、input event で連動している。
+    個体値ページではスライダーがインデックス制御（0=30,1=50,2=60,3=70）のため、
+    スライダー操作を避けてテキストボックスのみでレベルを変更する。
     """
     level_input = driver.find_element(By.ID, "levelDisplay")
-    level_input.clear()
-    level_input.send_keys(str(level))
-    slider = driver.find_element(By.ID, "levelSlider")
     driver.execute_script(
-        "arguments[0].value = arguments[1]; arguments[0].dispatchEvent(new Event('input'));",
-        slider,
-        str(level),
+        "arguments[0].value = arguments[1];"
+        "arguments[0].dispatchEvent(new Event('input',  { bubbles: true }));"
+        "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
+        level_input, str(level)
     )
     sleep(0.5)
 

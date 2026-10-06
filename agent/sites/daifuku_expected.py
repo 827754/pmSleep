@@ -30,23 +30,6 @@ INGREDIENT_SKIP_LIST = [
 
 
 # ---------------------------------------------------------------------------
-# Lv70 追加サブスキル選択
-# ---------------------------------------------------------------------------
-def select_subskill4(driver, sub75):
-    """Lv を 70 にして subSkill4（pokemon_subskill4）を有効化し選択する。
-
-    サイト側では Lv が 70 の時だけ subSkill4 が enabled になる。
-    70→60 に下げると自動的にリセットされるため、
-    この関数は Lv70 のチェック直前に呼ぶこと。
-    """
-    if not sub75:
-        return
-    set_level(driver, 70)
-    sub75 = sub75.replace("げんき", "元気")
-    select_subskill_by_visible_text(driver, "pokemon_subskill4", sub75)
-
-
-# ---------------------------------------------------------------------------
 # 結果テーブルパース
 # ---------------------------------------------------------------------------
 def parse_expected_table(driver):
@@ -146,14 +129,19 @@ def fetch_expected_values(driver, record):
     # --- MainLv ---
     select_main_lv(driver, main_lv)
 
-    # --- サブスキル（性格に応じて'げんき'→'元気'置換） ---
-    # sub1~3 は Lv に関係なく有効
+    # --- レベルを70に先に設定（subSkill4有効化のため） ---
+    set_level(driver, 70)
+
+    # --- サブスキル1～4（性格に応じて'げんき'→'元気'置換） ---
     sub10 = sub10.replace("げんき", "元気")
     sub25 = sub25.replace("げんき", "元気")
     sub50 = sub50.replace("げんき", "元気")
     select_subskill_by_visible_text(driver, "pokemon_subskill1", sub10)
     select_subskill_by_visible_text(driver, "pokemon_subskill2", sub25)
     select_subskill_by_visible_text(driver, "pokemon_subskill3", sub50)
+    if sub75:
+        sub75_norm = sub75.replace("げんき", "元気")
+        select_subskill_by_visible_text(driver, "pokemon_subskill4", sub75_norm)
 
     # --- 性格 ---
     select_personality(driver, record["personality"])
@@ -169,11 +157,14 @@ def fetch_expected_values(driver, record):
             print(f"{loop_name} の選択に失敗、次の進化系へ")
             continue
 
+        # ポケモン変更後は subSkill4 が disabled になる可能性があるため再設定
+        set_level(driver, 70)
+        if sub75:
+            sub75_norm = sub75.replace("げんき", "元気")
+            select_subskill_by_visible_text(driver, "pokemon_subskill4", sub75_norm)
+
         # --- Lv の高い順にチェック（70 → 60 → 30） ---
-        # Lv=70 のチェック直前に subSkill4 を選択（Lv70専用）
-        for lv in LEVELS_TO_CHECK:  # [70, 60, 30]
-            if lv == 70:
-                select_subskill4(driver, sub75)
+        for lv in LEVELS_TO_CHECK:
             set_level(driver, lv)
             click_check_button(driver)
             sleep(5)

@@ -15,6 +15,7 @@ from sites.daifuku_base import (
     pokemon_select,
     select_ingredient,
     select_subskill_with_fallback,
+    select_subskill_by_visible_text,
     select_personality,
     select_main_lv,
     select_evolution_count,
@@ -95,6 +96,7 @@ def fetch_individual_rates(driver, record):
     sub10 = record.get("sub10", "")
     sub25 = record.get("sub25", "")
     sub50 = record.get("sub50", "")
+    sub75 = record.get("sub75", "")  # Lv70追加サブスキル（あれば）
 
     # --- 初回ポケモン選択 ---
     if not pokemon_select(driver, poke_name_list[0]):
@@ -113,10 +115,16 @@ def fetch_individual_rates(driver, record):
     # --- MainLv ---
     select_main_lv(driver, main_lv)
 
-    # --- サブスキル（不明ならデフォルトへフォールバック） ---
+    # --- レベルを70に先に設定（subSkill4有効化のため） ---
+    set_level(driver, 70)
+
+    # --- サブスキル1～4 ---
     select_subskill_with_fallback(driver, "pokemon_subskill1", sub10, DEFAULT_SUBSKILL_1)
     select_subskill_with_fallback(driver, "pokemon_subskill2", sub25, DEFAULT_SUBSKILL_2)
     select_subskill_with_fallback(driver, "pokemon_subskill3", sub50, DEFAULT_SUBSKILL_3)
+    if sub75:
+        sub75_norm = sub75.replace("げんき", "元気")
+        select_subskill_by_visible_text(driver, "pokemon_subskill4", sub75_norm)
 
     # --- 性格 ---
     select_personality(driver, record["personality"])
@@ -125,7 +133,7 @@ def fetch_individual_rates(driver, record):
     select_evolution_count(driver, record["pokemon"])
 
     # --- 各 Lv でチェック蓄積（高い順：70→60→30） ---
-    for lv in LEVELS_TO_CHECK:  # [70, 60, 30]
+    for lv in LEVELS_TO_CHECK:
         set_level(driver, lv)
         click_check_button(driver)
         sleep(9)
@@ -134,6 +142,11 @@ def fetch_individual_rates(driver, record):
     for loop_name in poke_name_list[1:]:
         if not pokemon_select(driver, loop_name):
             continue
+        # ポケモン変更後は subSkill4 が disabled になる可能性があるため再設定
+        set_level(driver, 70)
+        if sub75:
+            sub75_norm = sub75.replace("げんき", "元気")
+            select_subskill_by_visible_text(driver, "pokemon_subskill4", sub75_norm)
         for lv in LEVELS_TO_CHECK:
             set_level(driver, lv)
             click_check_button(driver)

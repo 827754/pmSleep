@@ -125,3 +125,29 @@ def set_level(driver, level):
 - `daifuku_firebase_food.py` → `agent/old/daifuku_firebase_food.py.bak`
 - 元の `{uid}.json` → `agent/uid/{uid}.json`
 - 最新50件データ → `agent/{uid}.json`
+
+---
+
+## ユーザー追記 (2026-10-06)
+
+### ① subSkill4 が両方のページで機能していない
+期待値チェック・個体値チェック **両方** で `subSkill4` (Lv70 追加サブスキル) が正しく選択されていない。
+要因：
+- ポケモン選択後、レベルを先に 70 にしないと subSkill4 の `<select>` が disabled のまま
+- 現在のコードでは共通設定フェーズで subSkill1~3 と一緒に選ぼうとしている
+
+### ② 個体値ページのスライダー値が異なる
+個体値ページ `/checker/` の `levelSlider` は **値が Lv ではなくインデックス**。
+```html
+<input type="range" id="levelSlider" min="0" max="3" step="1" value="2">
+```
+| slider value | 実際の Lv |
+|---|---|
+| 0 | 30 |
+| 1 | 50 |
+| 2 | 60 |
+| 3 | 70 |
+
+**これは期待値ページ `/checker/expected/` とは異なる。** 期待値ページでは `min=30, max=70` の直接値。
+したがって `set_level()` はページごとに異なる実装が必要。または、個体値ページではスライダーを使わず `levelDisplay` テキストボックスのみで操作する。
+
